@@ -50,7 +50,18 @@ public class PayoutService extends ApiService {
                 .metadata(params.getMetadata())
                 .notificationUrl(params.getNotificationUrl())
                 .sendPaidNotification(params.getSendPaidNotification())
-                .physical(params.getPhysical());
+                .physical(params.getPhysical())
+                .coinPrecision(params.getCoinPrecision())
+                .customerEmail(params.getCustomerEmail())
+                .description(params.getDescription())
+                .metadata(params.getMetadata())
+                .source(params.getSource())
+                .customerIp(params.getCustomerIp())
+                .physical(params.getPhysical())
+                .targetType(params.getTargetType())
+                .target(params.getTarget())
+                .merOrderNo(params.getMerOrderNo())
+                .netWork(params.getNetWork());
 
         String path = "/v2/payout";
         return getResponseGetter().request(
