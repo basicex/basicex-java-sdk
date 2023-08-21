@@ -1,9 +1,12 @@
 package com.basicex.sdk.exception;
 
+import com.basicex.sdk.model.BasicexError;
+
 /**
  * BasicexException
  */
 public class BasicexException extends Exception {
+    private transient BasicexError stripeError;
     /**
      * Returns the error code of the response that triggered this exception
      *
@@ -68,5 +71,13 @@ public class BasicexException extends Exception {
      */
     public String getUserMessage() {
         return super.getMessage();
+    }
+
+    public BasicexError getStripeError() {
+        return stripeError;
+    }
+
+    public void setStripeError(BasicexError stripeError) {
+        this.stripeError = stripeError;
     }
 }

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.security.PrivateKey;
 import java.security.Security;
+import java.security.Signature;
 
 /**
  * PrivateKeyUtils
@@ -38,5 +39,22 @@ public class PrivateKeyUtils {
         }
 
         return null;
+    }
+
+    /**
+     * Sign data with private key
+     * @param privateKey private key
+     * @param algorithm algorithm
+     * @param input input
+     * @return byte[]
+     * @throws Exception
+     */
+    public static byte[] sign(PrivateKey privateKey, String algorithm, byte[] input) throws Exception {
+        Signature sign = Signature.getInstance(algorithm);
+        sign.initSign(privateKey);
+
+        sign.update(input);
+
+        return sign.sign();
     }
 }

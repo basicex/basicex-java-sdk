@@ -26,8 +26,8 @@ public class BasicexResponseStream extends AbstractBasicexResponse<InputStream> 
      * @return the StripeResponse
      */
     BasicexResponse unstream() throws IOException {
-        final String bodyString = StreamUtils.readToEnd(this.body, StandardCharsets.UTF_8);
-        this.body.close();
-        return new BasicexResponse(this.code, this.headers, bodyString);
+        final String bodyString = StreamUtils.readToEnd(this.getBody(), StandardCharsets.UTF_8);
+        this.getBody().close();
+        return new BasicexResponse(this.getCode(), this.getHeaders(), bodyString);
     }
 }

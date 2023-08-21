@@ -3,9 +3,13 @@ package com.basicex.sdk.util;
 import org.bouncycastle.asn1.x500.RDN;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.RFC4519Style;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemWriter;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -23,6 +27,18 @@ public class X509CertificateUtils {
      */
     public static String getCertificateSerialNo(X509Certificate certificate) {
         return formatByteArray(certificate.getSerialNumber().toByteArray());
+    }
+
+    public static String toPEMString(X509Certificate certificate) throws CertificateException, IOException {
+        StringWriter stringWriter = new StringWriter();
+        try (PemWriter pemWriter = new PemWriter(stringWriter)) {
+            PemObject pemObject = new PemObject("CERTIFICATE", certificate.getEncoded());
+            pemWriter.writeObject(pemObject);
+        } catch (IOException e) {
+            throw e;
+        }
+
+        return stringWriter.toString();
     }
 
     /**

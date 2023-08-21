@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.lang.reflect.Field;
+import java.util.Objects;
 
 public abstract class BasicexObject {
     public static final Gson PRETTY_PRINT_GSON =
@@ -46,7 +47,7 @@ public abstract class BasicexObject {
         // Lazily initialize this the first time the getter is called.
         if ((this.rawJsonObject == null) && (this.getLastResponse() != null)) {
             this.rawJsonObject =
-                    ApiResource.GSON.fromJson(this.getLastResponse().body(), JsonObject.class);
+                    ApiResource.GSON.fromJson(this.getLastResponse().getBody(), JsonObject.class);
         }
 
         return this.rawJsonObject;
@@ -66,22 +67,7 @@ public abstract class BasicexObject {
     }
 
     protected static boolean equals(Object a, Object b) {
-        return a == null ? b == null : a.equals(b);
+        return Objects.equals(a, b);
     }
 
-    /**
-     * Deserialize JSON into super class {@code BasicexObject} where the underlying concrete class
-     * corresponds to type specified in root-level {@code object} field of the JSON input.
-     *
-     * <p>Note that the expected JSON input is data at the {@code object} value, as a sibling to
-     * {@code previousAttributes}, and not the discriminator field containing a string.
-     *
-     * @return JSON data to be deserialized to super class {@code BasicexObject}
-     */
-    static BasicexObject deserializeBasicExObject(JsonObject eventDataObjectJson) {
-        String type = eventDataObjectJson.getAsJsonObject().get("object").getAsString();
-        Class<? extends BasicexObject> cl = EventDataClassLookup.classLookup.get(type);
-        return ApiResource.GSON.fromJson(
-                eventDataObjectJson, cl != null ? cl : BasicexRawJsonObject.class);
-    }
 }

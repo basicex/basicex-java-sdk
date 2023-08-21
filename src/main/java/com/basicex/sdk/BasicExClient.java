@@ -1,8 +1,12 @@
 package com.basicex.sdk;
 
+import com.basicex.sdk.net.BasicexResponseGetter;
+import com.basicex.sdk.net.HttpClient;
+import com.basicex.sdk.net.SignatureResponseGetter;
 import com.basicex.sdk.service.InvoiceService;
 import com.basicex.sdk.util.PrivateKeyUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.net.URI;
@@ -21,7 +25,8 @@ import java.util.List;
  *
  */
 public class BasicExClient {
-    private BasicExConfig config;
+    @Getter
+    private BasicexResponseGetter responseGetter;
 
     /**
      * Create a new BasicEx client instance.
@@ -29,7 +34,8 @@ public class BasicExClient {
      * @param configFilePath The config file path
      */
     public BasicExClient(String configFilePath) throws CertificateException, IOException {
-        this.config = BasicExConfig.loadConfig(configFilePath);
+        BasicExConfig config = BasicExConfig.loadConfig(configFilePath);
+        this.responseGetter = new SignatureResponseGetter(config);
     }
 
     /**
@@ -48,17 +54,19 @@ public class BasicExClient {
             throw new NullPointerException("certificateList is null or empty");
         }
 
-        this.config = BasicExConfig.builder()
+        BasicExConfig config = BasicExConfig.builder()
                 .privateKey(privateKey)
                 .certificate(certificateList.get(0))
                 .build();
+        this.responseGetter = new SignatureResponseGetter(config);
     }
 
     public BasicExClient(PrivateKey privateKey, X509Certificate certificate) throws IOException {
-        this.config = BasicExConfig.builder()
+        BasicExConfig config = BasicExConfig.builder()
                 .privateKey(privateKey)
                 .certificate(certificate)
                 .build();
+        this.responseGetter = new SignatureResponseGetter(config);
     }
 
     /**
@@ -66,10 +74,18 @@ public class BasicExClient {
      * @param config The BasicExConfig instance
      */
     public BasicExClient(BasicExConfig config) {
-        this.config = config;
+        this(config, null);
+    }
+
+    /**
+     * Create a new BasicEx client instance.
+     * @param config The BasicExConfig instance
+     */
+    public BasicExClient(BasicExConfig config, HttpClient client) {
+        this.responseGetter = new SignatureResponseGetter(client, config);
     }
 
     public InvoiceService invoices() {
-        return new InvoiceService(this.config);
+        return new InvoiceService(this.responseGetter);
     }
 }

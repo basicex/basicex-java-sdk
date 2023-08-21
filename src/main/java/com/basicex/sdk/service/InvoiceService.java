@@ -1,13 +1,69 @@
 package com.basicex.sdk.service;
 
-import com.basicex.sdk.BasicExConfig;
+import com.basicex.sdk.exception.BasicexException;
+import com.basicex.sdk.model.InvoiceObject;
+import com.basicex.sdk.model.params.InvoiceCreateParams;
+import com.basicex.sdk.model.request.InvoiceCreateRequest;
+import com.basicex.sdk.net.ApiResource;
+import com.basicex.sdk.net.BasicexResponseGetter;
+import com.basicex.sdk.net.RequestOptions;
 
-public class InvoiceService {
-    private final BasicExConfig config;
+import java.math.BigDecimal;
 
-    public InvoiceService(BasicExConfig config) {
-        this.config = config;
+public class InvoiceService extends ApiService {
+
+
+    public InvoiceService(BasicexResponseGetter getter) {
+        super(getter);
     }
 
-    public void create()
+    /**
+     * 创建一个新的支付订单票据
+     * @param params 票据创建参数
+     * @throws BasicexException
+     */
+    public InvoiceObject create(InvoiceCreateParams params) throws BasicexException {
+        return create(params, null);
+    }
+
+    /**
+     * 创建一个新的支付订单票据，并使用指定的请求选项
+     * @param params 票据创建参数
+     * @param options 请求选项
+     * @throws BasicexException
+     */
+    public InvoiceObject create(InvoiceCreateParams params, RequestOptions options) throws BasicexException {
+        // 检查参数
+        params.checkParams();
+
+        // 构建请求
+        InvoiceCreateRequest.InvoiceCreateRequestBuilder builder = InvoiceCreateRequest.builder();
+        if(params.getAmount() != null) {
+            builder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(params.getAmount().scale())).toBigInteger())
+                    .precision(params.getAmount().scale())
+                    .amountType(params.getAmountType().getCode());
+        }
+        builder.buyerId(params.getBuyerId())
+                .orderId(params.getOrderId())
+                .fiat(params.getFiat())
+                .currency(params.getCurrency())
+                .forcedChain(params.getForcedChain())
+                .metadata(params.getMetadata())
+                .payerEmail(params.getPayerEmail())
+                .notificationUrl(params.getNotificationUrl())
+                .redirectUrl(params.getRedirectUrl())
+                .buyerIp(params.getBuyerIp())
+                .sendPaidNotification(params.getSendPaidNotification())
+                .physical(params.getPhysical());
+
+        String path = "/v2/invoices";
+        return getResponseGetter().request(
+                ApiResource.RequestMethod.POST,
+                path,
+                builder.build(),
+                InvoiceObject.class,
+                true,
+                options);
+    }
+
 }

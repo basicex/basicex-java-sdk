@@ -1,6 +1,7 @@
 package com.basicex.sdk;
 
 import com.basicex.sdk.util.X509CertificateUtils;
+import lombok.Data;
 
 import java.io.IOException;
 import java.net.PasswordAuthentication;
@@ -13,6 +14,7 @@ import java.util.Objects;
 /**
  * BasicEx API Client Configuration
  */
+@Data
 public class BasicExConfig {
     public static final int DEFAULT_CONNECT_TIMEOUT = 30 * 1000;
     public static final int DEFAULT_READ_TIMEOUT = 80 * 1000;

@@ -1,6 +1,5 @@
 package com.basicex.sdk.net;
 
-import com.basicex.sdk.BasicEx;
 import com.basicex.sdk.exception.ApiConnectionException;
 import com.basicex.sdk.exception.BasicexException;
 

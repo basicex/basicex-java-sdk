@@ -1,10 +1,18 @@
 package com.basicex.sdk.net;
 
+import com.basicex.sdk.BasicExConfig;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.net.PasswordAuthentication;
 import java.net.Proxy;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 
+@Getter
+@Setter
+@Builder
 public class RequestOptions {
     private final X509Certificate certificate;
 
@@ -41,35 +49,29 @@ public class RequestOptions {
         this.proxyCredential = proxyCredential;
     }
 
-    public X509Certificate getCertificate() {
-        return certificate;
+    public static RequestOptions merge(RequestOptions options, BasicExConfig config) {
+        if(options == null) {
+            return new RequestOptions(
+                    config.getCertificate(),
+                    config.getPrivateKey(),
+                    config.getApiBaseUrl(),
+                    config.getConnectTimeout(),
+                    config.getReadTimeout(),
+                    config.getMaxNetworkRetries(),
+                    config.getConnectionProxy(),
+                    config.getProxyCredential());
+        }
+
+        return new RequestOptions(
+                options.getCertificate() != null ? options.getCertificate() : config.getCertificate(),
+                options.getPrivateKey() != null ? options.getPrivateKey() : config.getPrivateKey(),
+                options.getApiBaseUrl() != null ? options.getApiBaseUrl() : config.getApiBaseUrl(),
+                options.getConnectTimeout() != null ? options.getConnectTimeout() : config.getConnectTimeout(),
+                options.getReadTimeout() != null ? options.getReadTimeout() : config.getReadTimeout(),
+                options.getMaxNetworkRetries() != null ? options.getMaxNetworkRetries() : config.getMaxNetworkRetries(),
+                options.getConnectionProxy() != null ? options.getConnectionProxy() : config.getConnectionProxy(),
+                options.getProxyCredential() != null ? options.getProxyCredential() : config.getProxyCredential()
+        );
     }
 
-    public PrivateKey getPrivateKey() {
-        return privateKey;
-    }
-
-    public String getApiBaseUrl() {
-        return apiBaseUrl;
-    }
-
-    public Integer getConnectTimeout() {
-        return connectTimeout;
-    }
-
-    public Integer getReadTimeout() {
-        return readTimeout;
-    }
-
-    public Integer getMaxNetworkRetries() {
-        return maxNetworkRetries;
-    }
-
-    public Proxy getConnectionProxy() {
-        return connectionProxy;
-    }
-
-    public PasswordAuthentication getProxyCredential() {
-        return proxyCredential;
-    }
 }

@@ -58,6 +58,13 @@ public class HttpContent {
         return buildMultipartFormDataContent(nameValueCollection, boundary);
     }
 
+    public static HttpContent buildApplicationJsonContent(Object params) throws IOException {
+        String body = ApiResource.GSON.toJson(params);
+        return new HttpContent(
+                body.getBytes(), String.format("application/json;charset=%s", ApiResource.CHARSET));
+    }
+
+
     /**
      * Builds a new HttpContent for name/value tuples encoded using {@code multipart/form-data} MIME
      * type.

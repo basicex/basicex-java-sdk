@@ -4,8 +4,12 @@
 
 ### Intellitarget/J IDEA ###
 .idea/**
+.idea/*.*
+.idea/
 ### VS Code ###
 .vscode/
+*.iml
+*.log
 
 ### Mac OS ###
 .DS_Store

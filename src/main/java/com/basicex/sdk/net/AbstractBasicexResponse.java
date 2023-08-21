@@ -62,4 +62,13 @@ public abstract class AbstractBasicexResponse<T> {
     public void setNumRetries(int numRetries) {
         this.numRetries = numRetries;
     }
+
+    /**
+     * Gets the ID of the request, as returned by BasicEx.
+     *
+     * @return the ID of the request, as returned by BasicEx
+     */
+    public String getRequestId() {
+        return this.headers.firstValue("Request-Id").orElse(null);
+    }
 }

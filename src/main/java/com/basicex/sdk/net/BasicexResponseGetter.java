@@ -3,7 +3,6 @@ package com.basicex.sdk.net;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.BasicexObject;
 
-import java.util.Map;
 import java.lang.reflect.Type;
 import java.io.InputStream;
 
@@ -11,15 +10,17 @@ public interface BasicexResponseGetter {
     <T extends BasicexObject> T request(
             ApiResource.RequestMethod method,
             String path,
-            Map<String, Object> params,
+            Object params,
             Type typeToken,
+            Boolean signRequest,
             RequestOptions options)
             throws BasicexException;
 
     InputStream requestStream(
             ApiResource.RequestMethod method,
             String path,
-            Map<String, Object> params,
+            Object params,
+            Boolean signRequest,
             RequestOptions options)
             throws BasicexException;
 
