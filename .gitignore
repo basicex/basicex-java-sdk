@@ -35,6 +35,7 @@ target/
 *.tar
 *.tar.gz
 *.versionsBackup
+*.class
 
 ### vscode ###
 .vscode
