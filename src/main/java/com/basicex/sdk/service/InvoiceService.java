@@ -3,12 +3,17 @@ package com.basicex.sdk.service;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.params.InvoiceCreateParams;
+import com.basicex.sdk.model.params.InvoiceUpdateParams;
+import com.basicex.sdk.model.params.constant.ChainNetwork;
 import com.basicex.sdk.model.request.InvoiceCreateRequest;
+import com.basicex.sdk.model.request.InvoiceUpdateRequest;
 import com.basicex.sdk.net.ApiResource;
 import com.basicex.sdk.net.BasicexResponseGetter;
 import com.basicex.sdk.net.RequestOptions;
 
 import java.math.BigDecimal;
+import java.util.Objects;
+import java.util.Optional;
 
 public class InvoiceService extends ApiService {
 
@@ -47,7 +52,7 @@ public class InvoiceService extends ApiService {
                 .orderId(params.getOrderId())
                 .fiat(params.getFiat())
                 .currency(params.getCurrency())
-                .forcedChain(params.getForcedChain())
+                .forcedChain(Optional.ofNullable(params.getForcedChain()).map(ChainNetwork::getCode).orElse(null))
                 .metadata(params.getMetadata())
                 .payerEmail(params.getPayerEmail())
                 .notificationUrl(params.getNotificationUrl())
@@ -87,6 +92,50 @@ public class InvoiceService extends ApiService {
                 ApiResource.RequestMethod.GET,
                 path,
                 null,
+                InvoiceObject.class,
+                true,
+                options);
+    }
+
+    /**
+     * 根据支付票据ID更新支付票据信息
+     * @param invoiceID 支付票据ID
+     * @param params 更新参数
+     * @return
+     */
+    public InvoiceObject update(String invoiceID, InvoiceUpdateParams params) throws BasicexException {
+        return update(invoiceID, params, null);
+    }
+
+    /**
+     * 根据支付票据ID更新支付票据信息
+     * @param invoiceID 支付票据ID
+     * @param params 更新参数
+     * @param options 请求选项
+     * @return 支付票据信息
+     */
+    public InvoiceObject update(String invoiceID, InvoiceUpdateParams params, RequestOptions options) throws BasicexException {
+        // 检查参数
+        params.checkParams();
+
+        InvoiceUpdateRequest.InvoiceUpdateRequestBuilder builder = InvoiceUpdateRequest.builder();
+        if(params.getAmount() != null) {
+            builder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(params.getAmount().scale())).toBigInteger())
+                    .precision(params.getAmount().scale())
+                    .amountType(params.getAmountType().getCode());
+        }
+
+        builder.chain(Optional.ofNullable(params.getChain()).map(ChainNetwork::getCode).orElse(null))
+                .ignoreParameterFailed(params.getIgnoreParameterFailed())
+                .payerEmail(params.getPayerEmail())
+                .redirectUrl(params.getRedirectUrl())
+                .currency(params.getCurrency());
+
+        String path = String.format("/invoices/%s", Objects.requireNonNull(invoiceID));
+        return getResponseGetter().request(
+                ApiResource.RequestMethod.PUT,
+                path,
+                builder.build(),
                 InvoiceObject.class,
                 true,
                 options);

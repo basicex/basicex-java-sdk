@@ -91,8 +91,8 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
     }
 
     private String signature(Object params, String path, RequestOptions options) throws SignatureException {
-        String signStr = ApiResource.GSON.toJson(params);
-        String signInput = options.getApiBaseUrl() + path + signStr;
+        String signStr = Optional.ofNullable(params).map(ApiResource.GSON::toJson).orElse(null);
+        String signInput = options.getApiBaseUrl() + path + Optional.ofNullable(signStr).orElse("");
 
         try {
             byte[] sign = PrivateKeyUtils.sign(options.getPrivateKey(), options.getCertificate().getSigAlgName(), signInput.getBytes());

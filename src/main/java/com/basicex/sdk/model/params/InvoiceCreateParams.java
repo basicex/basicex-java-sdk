@@ -2,6 +2,7 @@ package com.basicex.sdk.model.params;
 
 
 import com.basicex.sdk.model.params.constant.AmountType;
+import com.basicex.sdk.model.params.constant.ChainNetwork;
 import com.basicex.sdk.util.Preconditions;
 import com.basicex.sdk.util.StringUtils;
 import lombok.Builder;
@@ -40,7 +41,7 @@ public class InvoiceCreateParams {
     /**
      * 强制选择指定的链，例如: TRC20, ERC20等。当该参数传入时，用户只能在此链下进行支付，且不能使用币趣钱包支付。
      */
-    private String forcedChain;
+    private ChainNetwork forcedChain;
 
     /**
      * 支付金额，该支付金额将根据`amount_type`字段进行判断。
@@ -117,7 +118,7 @@ public class InvoiceCreateParams {
              }
         }
 
-        if(StringUtils.isNotEmpty(this.forcedChain)) {
+        if(this.forcedChain != null) {
             Preconditions.checkArgument(StringUtils.isNotEmpty(this.currency), "currency is required");
             Preconditions.checkArgument(this.amount != null, "amount is required");
             Preconditions.checkArgument(this.amountType != null, "amountType is required");

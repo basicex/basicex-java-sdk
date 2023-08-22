@@ -83,7 +83,7 @@ public class BasicexRequest {
 
     private static HttpContent buildContent(
             ApiResource.RequestMethod method, Object params) throws IOException {
-        if (method != ApiResource.RequestMethod.POST) {
+        if (method != ApiResource.RequestMethod.POST && method != ApiResource.RequestMethod.PUT) {
             return null;
         }
 

@@ -30,6 +30,7 @@ public abstract class ApiResource extends BasicexObject {
     public enum RequestMethod {
         GET,
         POST,
-        DELETE
+        DELETE,
+        PUT,
     }
 }
