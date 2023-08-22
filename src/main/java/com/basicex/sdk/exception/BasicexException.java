@@ -1,12 +1,13 @@
 package com.basicex.sdk.exception;
 
 import com.basicex.sdk.model.BasicexError;
+import com.basicex.sdk.util.StringUtils;
 
 /**
  * BasicexException
  */
 public class BasicexException extends Exception {
-    private transient BasicexError stripeError;
+    private transient BasicexError basicexError;
     /**
      * Returns the error code of the response that triggered this exception
      *
@@ -58,6 +59,9 @@ public class BasicexException extends Exception {
         if (code != null) {
             additionalInfo += "; code: " + code;
         }
+        if (basicexError != null && StringUtils.isNotEmpty(basicexError.getParam())) {
+            additionalInfo += "; param: " + basicexError.getParam();
+        }
         if (requestId != null) {
             additionalInfo += "; request-id: " + requestId;
         }
@@ -73,11 +77,11 @@ public class BasicexException extends Exception {
         return super.getMessage();
     }
 
-    public BasicexError getStripeError() {
-        return stripeError;
+    public void setBasicexError(BasicexError basicexError) {
+        this.basicexError = basicexError;
     }
 
-    public void setStripeError(BasicexError stripeError) {
-        this.stripeError = stripeError;
+    public BasicexError getBasicexError() {
+        return this.basicexError;
     }
 }

@@ -117,7 +117,7 @@ public abstract class HttpClient {
      * @return a string containing the value of the {@code User-Agent} header
      */
     protected static String buildUserAgentString() {
-        String userAgent = String.format("BasicEx/v2 JavaBindings/%s", BasicEx.VERSION);
+        String userAgent = String.format("BasicEx/v2 JavaBindings/%s", null);
 
         return userAgent;
     }

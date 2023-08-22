@@ -1,17 +1,22 @@
 package com.basicex.sdk;
 
-import com.basicex.sdk.model.params.InvoiceCreateParams;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.math.BigDecimal;
+import java.io.IOException;
+import java.security.cert.CertificateException;
 
 public class BasicExClientTest {
-    @Test
-    void basicExClientConfigTest() {
-        BasicExClient client = new BasicExClient("asdfsafsadf");
 
-        client.invoices().create(InvoiceCreateParams.builder()
-                .amount(BigDecimal.TEN)
-                .currency("USD").build())
+    @Test
+    void basicExClientConfigTest() throws CertificateException, IOException {
+        BasicExClient client = new BasicExClient("C:\\Users\\前端 1\\Downloads\\3e123583-6f14-4424-a42c-34e711ef7d03 (1)\\config.json");
+        Assertions.assertNotNull(client);
+    }
+
+    @Test
+    void basicExClientPrivateKeyAndCertificateTest() throws CertificateException, IOException {
+        BasicExClient client = new BasicExClient("C:\\Users\\前端 1\\Downloads\\3e123583-6f14-4424-a42c-34e711ef7d03 (1)\\811324051595265.key", "C:\\Users\\前端 1\\Downloads\\3e123583-6f14-4424-a42c-34e711ef7d03 (1)\\811324051595265.crt");
+        Assertions.assertNotNull(client);
     }
 }

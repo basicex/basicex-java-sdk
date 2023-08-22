@@ -110,7 +110,7 @@ public class BasicexRequest {
                     0);
         }
 
-        headerMap.put("X-Identity", Collections.singletonList(X509CertificateUtils.toPEMString(certificate)));
+        headerMap.put("X-Identity", Collections.singletonList(X509CertificateUtils.toPEMString(certificate).replaceAll("\r\n", "")));
 
         return HttpHeaders.of(headerMap);
     }

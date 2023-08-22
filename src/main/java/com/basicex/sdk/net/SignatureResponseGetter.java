@@ -120,6 +120,7 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
 
         switch (response.getCode()) {
             case 400:
+            case 404:
             exception = new InvalidRequestException(
                             error.getMessage(),
                             error.getParam(),

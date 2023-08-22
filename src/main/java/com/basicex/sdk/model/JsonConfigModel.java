@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * YamlConfigModel
  */
-public class YamlConfigModel implements Serializable {
+public class JsonConfigModel implements Serializable {
     private String privateKey;
 
     private String certificate;
