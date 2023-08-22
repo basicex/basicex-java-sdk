@@ -21,18 +21,6 @@ import java.util.UUID;
 
 public class PayoutServiceTest extends BaseTest {
 
-    @Test
-    void createEmptyInvoiceTest() throws CertificateException, IOException, BasicexException {
-        InvoiceObject invoice = getClient().invoices().create(InvoiceCreateParams.builder()
-                .fiat("USD")
-                .orderId(UUID.randomUUID().toString())
-                .description("Test invoice:" + UUID.randomUUID().toString())
-                .buyerIp("127.0.0.1")
-                .notificationUrl("https://google.com")
-                .build());
-
-        Assertions.assertNotNull(invoice);
-    }
 
     @Test
     public void createPayoutTest() throws CertificateException, IOException, BasicexException {
