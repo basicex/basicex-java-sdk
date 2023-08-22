@@ -5,6 +5,7 @@ import com.basicex.sdk.net.HttpClient;
 import com.basicex.sdk.net.SignatureResponseGetter;
 import com.basicex.sdk.service.InvoiceService;
 import com.basicex.sdk.service.PayoutService;
+import com.basicex.sdk.service.RefundService;
 import com.basicex.sdk.util.PrivateKeyUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
 import lombok.Getter;
@@ -93,6 +94,10 @@ public class BasicExClient {
 
     public PayoutService payout() {
         return new PayoutService(this.responseGetter);
+    }
+
+    public RefundService refund() {
+        return new RefundService(this.responseGetter);
     }
 
 }

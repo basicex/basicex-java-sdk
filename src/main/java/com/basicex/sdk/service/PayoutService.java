@@ -1,7 +1,6 @@
 package com.basicex.sdk.service;
 
 import com.basicex.sdk.exception.BasicexException;
-import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.PayoutObject;
 import com.basicex.sdk.model.params.PayoutCreateParams;
 import com.basicex.sdk.model.request.PayoutCreateRequest;
@@ -69,7 +68,7 @@ public class PayoutService extends ApiService {
                 ApiResource.RequestMethod.POST,
                 url,
                 payoutRequestBuilder.build(),
-                InvoiceObject.class,
+                PayoutObject.class,
                 true,
                 options);
 
