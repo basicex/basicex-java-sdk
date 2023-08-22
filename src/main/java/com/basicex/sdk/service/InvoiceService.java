@@ -54,9 +54,10 @@ public class InvoiceService extends ApiService {
                 .redirectUrl(params.getRedirectUrl())
                 .buyerIp(params.getBuyerIp())
                 .sendPaidNotification(params.getSendPaidNotification())
+                .description(params.getDescription())
                 .physical(params.getPhysical());
 
-        String path = "/v2/invoices";
+        String path = "/invoices";
         return getResponseGetter().request(
                 ApiResource.RequestMethod.POST,
                 path,

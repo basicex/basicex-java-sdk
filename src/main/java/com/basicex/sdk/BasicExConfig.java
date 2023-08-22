@@ -1,5 +1,6 @@
 package com.basicex.sdk;
 
+import com.basicex.sdk.util.StringUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
 import lombok.Data;
 
@@ -35,7 +36,7 @@ public class BasicExConfig {
     private volatile Proxy connectionProxy = null;
     private volatile PasswordAuthentication proxyCredential = null;
 
-    private volatile String apiBaseUrl;
+    private volatile String apiBaseUrl = "http://192.168.31.67:7013";
 
     private BasicExConfig() {}
 
@@ -107,7 +108,9 @@ public class BasicExConfig {
         }
 
         public Builder apiBaseUrl(String apiBaseUrl) {
-            this.config.apiBaseUrl = apiBaseUrl;
+            if(StringUtils.isNotEmpty(apiBaseUrl)) {
+                this.config.apiBaseUrl = apiBaseUrl;
+            }
             return this;
         }
 

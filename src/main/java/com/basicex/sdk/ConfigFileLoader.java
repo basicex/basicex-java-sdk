@@ -1,17 +1,18 @@
 package com.basicex.sdk;
 
 
-import com.basicex.sdk.model.YamlConfigModel;
+import com.basicex.sdk.model.JsonConfigModel;
 import com.basicex.sdk.util.PrivateKeyUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
-import org.yaml.snakeyaml.Yaml;
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.security.PrivateKey;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -23,7 +24,7 @@ import java.util.List;
 public class ConfigFileLoader {
 
     public static BasicExConfig load(String configFilePath) throws IOException, CertificateException {
-        YamlConfigModel configModel = loadYaml(configFilePath);
+        JsonConfigModel configModel = loadJson(configFilePath);
 
         if(configModel == null) {
             throw new NullPointerException("configModel is null");
@@ -42,10 +43,10 @@ public class ConfigFileLoader {
                 .build();
     }
 
-    private static YamlConfigModel loadYaml(String configPath) throws IOException {
-        Yaml yaml = new Yaml();
-        try(InputStream input = Files.newInputStream(Paths.get(URI.create(configPath)),StandardOpenOption.READ)) {
-            return yaml.loadAs(input, YamlConfigModel.class);
+    private static JsonConfigModel loadJson(String configPath) throws IOException {
+        Gson gson = new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create();
+        try(BufferedReader input = Files.newBufferedReader(Paths.get(configPath))) {
+            return gson.fromJson(input, JsonConfigModel.class);
         }
     }
 }
