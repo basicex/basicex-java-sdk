@@ -69,7 +69,7 @@ public class PayoutService extends ApiService {
                 ApiResource.RequestMethod.POST,
                 url,
                 payoutRequestBuilder.build(),
-                InvoiceObject.class,
+                PayoutObject.class,
                 true,
                 options);
 

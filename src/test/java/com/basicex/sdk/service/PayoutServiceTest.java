@@ -4,6 +4,7 @@ package com.basicex.sdk.service;
 import com.basicex.sdk.BaseTest;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.InvoiceObject;
+import com.basicex.sdk.model.PayoutObject;
 import com.basicex.sdk.model.params.InvoiceCreateParams;
 import com.basicex.sdk.model.params.PayoutCreateParams;
 import com.basicex.sdk.model.params.constant.AmountType;
@@ -42,7 +43,7 @@ public class PayoutServiceTest extends BaseTest {
         map.put("age", "24");
 
         PayoutCreateParams params = PayoutCreateParams.builder()
-                .amount(new BigDecimal(2))
+                .amount(new BigDecimal(214599))
                 .amountType(AmountType.COIN_AMOUNT)
                 .coinPrecision(6)
                 .fiat("USD")
@@ -56,9 +57,10 @@ public class PayoutServiceTest extends BaseTest {
                 .physical(Boolean.TRUE)
                 .targetType("EMAIL")
                 .target("1302010544@qq.com")
-                .merOrderNo(UUID.randomUUID().toString())
+                .merOrderNo(UUID.randomUUID().toString().replace("-", ""))
                 .build();
-        payout.create(params);
+        PayoutObject payoutObject = payout.create(params);
+        System.out.println(payoutObject);
 
     }
 }
