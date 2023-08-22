@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 
 public class PayoutService extends ApiService {
 
+    private static final String url = "/v2/payout";
+
     protected PayoutService(BasicexResponseGetter responseGetter) {
         super(responseGetter);
     }
@@ -39,7 +41,7 @@ public class PayoutService extends ApiService {
         params.checkParams();
         //构建请求参数
         PayoutCreateRequest.PayoutCreateRequestBuilder payoutRequestBuilder = PayoutCreateRequest.builder();
-        if(params.getAmount() != null) {
+        if (params.getAmount() != null) {
             payoutRequestBuilder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(params.getAmount().scale())).toBigInteger())
                     .precision(params.getAmount().scale())
                     .amountType(params.getAmountType().getCode());
@@ -63,10 +65,9 @@ public class PayoutService extends ApiService {
                 .merOrderNo(params.getMerOrderNo())
                 .netWork(params.getNetWork());
 
-        String path = "/v2/payout";
         return getResponseGetter().request(
                 ApiResource.RequestMethod.POST,
-                path,
+                url,
                 payoutRequestBuilder.build(),
                 InvoiceObject.class,
                 true,
