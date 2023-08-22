@@ -1,16 +1,59 @@
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+### gradle ###
+.gradle
+/build/
+!gradle/wrapper/gradle-wrapper.jar
 
-### Intellitarget/J IDEA ###
-.idea/**
-.idea/*.*
-.idea/
-### VS Code ###
-.vscode/
+### STS ###
+.settings/
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
 *.iml
+*.ipr
+rebel.xml
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+### maven ###
+target/
+*.war
+*.ear
+*.zip
+*.tar
+*.tar.gz
+*.versionsBackup
+
+### vscode ###
+.vscode
+
+### logs ###
+/logs/
 *.log
 
-### Mac OS ###
+### temp ignore ###
+*.cache
+*.diff
+*.patch
+*.tmp
+*.java~
+*.properties~
+*.xml~
+
+### system ignore ###
 .DS_Store
-/target/**
+Thumbs.db
+Servers
+.metadata
