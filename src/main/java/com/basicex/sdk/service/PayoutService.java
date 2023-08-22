@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 
 public class PayoutService extends ApiService {
 
-    private static final String url = "/v2/payout";
+    private static final String url = "/payout";
 
     public PayoutService(BasicexResponseGetter responseGetter) {
         super(responseGetter);
