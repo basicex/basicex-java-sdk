@@ -1,9 +1,9 @@
 package com.basicex.sdk.service;
 
 import com.basicex.sdk.exception.BasicexException;
-import com.basicex.sdk.model.PayoutObject;
-import com.basicex.sdk.model.params.PayoutCreateParams;
-import com.basicex.sdk.model.request.PayoutCreateRequest;
+import com.basicex.sdk.model.RefundObject;
+import com.basicex.sdk.model.params.RefundCreateParams;
+import com.basicex.sdk.model.request.RefundCreateRequest;
 import com.basicex.sdk.net.ApiResource;
 import com.basicex.sdk.net.BasicexResponseGetter;
 import com.basicex.sdk.net.RequestOptions;
@@ -19,56 +19,47 @@ public class RefundService extends ApiService {
     }
 
     /**
-     * 创建一个新的代付订单票据
+     * 创建一个新的退款订单票据
      *
      * @param params 票据创建参数
      * @throws BasicexException
      */
-    public PayoutObject create(PayoutCreateParams params) throws BasicexException {
+    public RefundObject create(RefundCreateParams params) throws BasicexException {
         return create(params, null);
     }
 
     /**
-     * 创建一个新的代付订单票据，并使用指定的请求选项
+     * 创建一个新的退款订单票据，并使用指定的请求选项
      *
      * @param params  票据创建参数
      * @param options 请求选项
      * @throws BasicexException
      */
-    public PayoutObject create(PayoutCreateParams params, RequestOptions options) throws BasicexException {
+    public RefundObject create(RefundCreateParams params, RequestOptions options) throws BasicexException {
         //校验代付订单参数
         params.checkParams();
         //构建请求参数
-        PayoutCreateRequest.PayoutCreateRequestBuilder payoutRequestBuilder = PayoutCreateRequest.builder();
+        RefundCreateRequest.RefundCreateRequestBuilder refundRequestBuilder = RefundCreateRequest.builder();
         if (params.getAmount() != null) {
-            payoutRequestBuilder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(params.getAmount().scale())).toBigInteger())
-                    .precision(params.getAmount().scale())
-                    .amountType(params.getAmountType().getCode());
+            refundRequestBuilder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(params.getAmount().scale())).toBigInteger())
+                    .precision(params.getAmount().scale());
         }
-        payoutRequestBuilder
-                .fiat(params.getFiat())
-                .currency(params.getCurrency())
-                .metadata(params.getMetadata())
-                .notificationUrl(params.getNotificationUrl())
-                .sendPaidNotification(params.getSendPaidNotification())
-                .physical(params.getPhysical())
+        refundRequestBuilder
                 .coinPrecision(params.getCoinPrecision())
                 .customerEmail(params.getCustomerEmail())
-                .description(params.getDescription())
-                .metadata(params.getMetadata())
-                .source(params.getSource())
-                .customerIp(params.getCustomerIp())
-                .physical(params.getPhysical())
-                .targetType(params.getTargetType())
-                .target(params.getTarget())
                 .merOrderNo(params.getMerOrderNo())
-                .netWork(params.getNetWork());
+                .amountType(params.getAmountType())
+                .orderNo(params.getOrderNo())
+                .merRefundOrderNo(params.getMerRefundOrderNo())
+                .refundReason(params.getRefundReason())
+                .tradeStartTime(params.getTradeStartTime())
+                .customerEmail(params.getCustomerEmail());
 
         return getResponseGetter().request(
                 ApiResource.RequestMethod.POST,
                 url,
-                payoutRequestBuilder.build(),
-                PayoutObject.class,
+                refundRequestBuilder.build(),
+                RefundObject.class,
                 true,
                 options);
 
