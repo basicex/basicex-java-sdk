@@ -15,7 +15,6 @@ public abstract class ApiResource extends BasicexObject {
     private static Gson createGson() {
         GsonBuilder builder =
                 new GsonBuilder()
-                        .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
                         .addReflectionAccessFilter(
                                 rawClass -> {
                                     if (rawClass.getTypeName().startsWith("com.basicex.")) {

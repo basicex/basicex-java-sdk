@@ -26,5 +26,13 @@ public class InvoiceServiceTest extends BaseTest {
                 .build());
 
         Assertions.assertNotNull(invoice);
+        Assertions.assertNotNull(invoice.getInvoiceId());
+    }
+
+    @Test
+    void getInvoiceTest() throws CertificateException, IOException, BasicexException {
+        InvoiceObject invoice = getClient().invoices().get("40620230822110512159365430886561");
+        Assertions.assertNotNull(invoice);
+        Assertions.assertNotNull(invoice.getInvoiceId());
     }
 }

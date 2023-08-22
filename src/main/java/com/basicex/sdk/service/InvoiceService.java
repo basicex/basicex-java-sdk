@@ -67,4 +67,29 @@ public class InvoiceService extends ApiService {
                 options);
     }
 
+    /**
+     * 根据支付票据ID获取支付票据信息
+     * @param invoiceID 支付票据ID
+     * @throws BasicexException
+     */
+    public InvoiceObject get(String invoiceID) throws BasicexException {
+        return get(invoiceID, null);
+    }
+
+    /**
+     * 根据支付票据ID获取支付票据信息
+     * @param invoiceID 支付票据ID
+     * @throws BasicexException
+     */
+    public InvoiceObject get(String invoiceID, RequestOptions options) throws BasicexException {
+        String path = String.format("/invoices/%s", invoiceID);
+        return getResponseGetter().request(
+                ApiResource.RequestMethod.GET,
+                path,
+                null,
+                InvoiceObject.class,
+                true,
+                options);
+    }
+
 }

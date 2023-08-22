@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
 public class InvoiceObject extends BasicexObject {
     /**
      * 支付票据ID
