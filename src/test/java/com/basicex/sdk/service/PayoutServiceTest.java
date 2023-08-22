@@ -43,7 +43,7 @@ public class PayoutServiceTest extends BaseTest {
         map.put("age", "24");
 
         PayoutCreateParams params = PayoutCreateParams.builder()
-                .amount(new BigDecimal(1))
+                .amount(new BigDecimal(10))
                 .amountType(AmountType.COIN_AMOUNT)
                 .coinPrecision(6)
                 .fiat("USD")
