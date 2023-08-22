@@ -15,7 +15,7 @@ public class PayoutService extends ApiService {
 
     private static final String url = "/v2/payout";
 
-    protected PayoutService(BasicexResponseGetter responseGetter) {
+    public PayoutService(BasicexResponseGetter responseGetter) {
         super(responseGetter);
     }
 

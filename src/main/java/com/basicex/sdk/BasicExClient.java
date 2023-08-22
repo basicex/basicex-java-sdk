@@ -4,6 +4,7 @@ import com.basicex.sdk.net.BasicexResponseGetter;
 import com.basicex.sdk.net.HttpClient;
 import com.basicex.sdk.net.SignatureResponseGetter;
 import com.basicex.sdk.service.InvoiceService;
+import com.basicex.sdk.service.PayoutService;
 import com.basicex.sdk.util.PrivateKeyUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
 import lombok.Getter;
@@ -22,7 +23,6 @@ import java.util.List;
  * It providers a means of accessing all the methods on the BasicEx API.
  * and the ability to set configuration such as Certificate-based Authentication
  * and connection timeouts.
- *
  */
 public class BasicExClient {
     @Getter
@@ -41,7 +41,7 @@ public class BasicExClient {
     /**
      * Create a new BasicEx client instance.
      *
-     * @param privateKeyFilePath The private key file path based on the format(PKCS#1 or PKCS#8)
+     * @param privateKeyFilePath  The private key file path based on the format(PKCS#1 or PKCS#8)
      * @param certificateFilePath The  certificate file path based on the X.509 certificate format
      */
     public BasicExClient(String privateKeyFilePath, String certificateFilePath) throws IOException, CertificateException {
@@ -50,7 +50,7 @@ public class BasicExClient {
 
         PrivateKey privateKey = PrivateKeyUtils.loadPrivateKey(new String(privateKeyBytes));
         List<X509Certificate> certificateList = X509CertificateUtils.toX509CertificateList(new String(certificateBytes));
-        if(certificateList == null || certificateList.isEmpty()) {
+        if (certificateList == null || certificateList.isEmpty()) {
             throw new NullPointerException("certificateList is null or empty");
         }
 
@@ -71,6 +71,7 @@ public class BasicExClient {
 
     /**
      * Create a new BasicEx client instance.
+     *
      * @param config The BasicExConfig instance
      */
     public BasicExClient(BasicExConfig config) {
@@ -79,6 +80,7 @@ public class BasicExClient {
 
     /**
      * Create a new BasicEx client instance.
+     *
      * @param config The BasicExConfig instance
      */
     public BasicExClient(BasicExConfig config, HttpClient client) {
@@ -88,4 +90,9 @@ public class BasicExClient {
     public InvoiceService invoices() {
         return new InvoiceService(this.responseGetter);
     }
+
+    public PayoutService payout() {
+        return new PayoutService(this.responseGetter);
+    }
+
 }
