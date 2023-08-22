@@ -8,7 +8,7 @@ import com.basicex.sdk.model.PayoutObject;
 import com.basicex.sdk.model.params.InvoiceCreateParams;
 import com.basicex.sdk.model.params.PayoutCreateParams;
 import com.basicex.sdk.model.params.constant.AmountType;
-import com.basicex.sdk.util.StringUtils;
+import com.basicex.sdk.model.params.constant.NetWorkType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +43,7 @@ public class PayoutServiceTest extends BaseTest {
         map.put("age", "24");
 
         PayoutCreateParams params = PayoutCreateParams.builder()
-                .amount(new BigDecimal(214599))
+                .amount(new BigDecimal(1))
                 .amountType(AmountType.COIN_AMOUNT)
                 .coinPrecision(6)
                 .fiat("USD")
@@ -55,8 +55,9 @@ public class PayoutServiceTest extends BaseTest {
                 .source("APP")
                 .customerIp("192.168.31.125")
                 .physical(Boolean.TRUE)
-                .targetType("EMAIL")
-                .target("1302010544@qq.com")
+                .targetType("ADDRESS")
+                .target("0x682D39Ea8d26510BE379d30807AF61e5eF9E269b")
+                .netWork(NetWorkType.ERC20.code)
                 .merOrderNo(UUID.randomUUID().toString().replace("-", ""))
                 .build();
         PayoutObject payoutObject = payout.create(params);
