@@ -10,11 +10,11 @@ import com.basicex.sdk.net.RequestOptions;
 
 import java.math.BigDecimal;
 
-public class PayoutService extends ApiService {
+public class RefundService extends ApiService {
 
-    private static final String url = "/payout";
+    private static final String url = "/refunds";
 
-    public PayoutService(BasicexResponseGetter responseGetter) {
+    public RefundService(BasicexResponseGetter responseGetter) {
         super(responseGetter);
     }
 
