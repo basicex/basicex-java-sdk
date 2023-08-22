@@ -34,7 +34,7 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
         String fullUrl = String.format("%s%s", Optional.ofNullable(options).map(x->Optional.ofNullable(x.getApiBaseUrl()).orElse(config.getApiBaseUrl())).orElse(config.getApiBaseUrl()), path);
         BasicexRequest request = new BasicexRequest(method, fullUrl, params, RequestOptions.merge(options, config));
         if (signRequest) {
-            request.getHeaders().withAdditionalHeader("X-Signature", signature(params, path, request.getOptions()));
+            request.setHeaders(request.getHeaders().withAdditionalHeader("X-Signature", signature(params, path, request.getOptions())));
         }
         BasicexResponse response = httpClient.requestWithRetries(request);
 
@@ -150,7 +150,7 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
                 break;
         }
 
-        exception.setStripeError(error);
+        exception.setBasicexError(error);
 
         throw exception;
     }
