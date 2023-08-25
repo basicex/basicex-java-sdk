@@ -29,6 +29,8 @@ public class InvoiceServiceTest extends BaseTest {
                 .description("Test invoice:" + UUID.randomUUID().toString())
                 .buyerIp("127.0.0.1")
                 .notificationUrl("https://google.com")
+                .amountType(AmountType.MONEY_PRICE)
+                .amount(BigDecimal.valueOf(1000000))
                 .build());
 
         Assertions.assertNotNull(invoice);
