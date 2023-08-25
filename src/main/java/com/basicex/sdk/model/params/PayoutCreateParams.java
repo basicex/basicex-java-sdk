@@ -25,11 +25,6 @@ public class PayoutCreateParams {
     private BigDecimal amount;
 
     /**
-     * 币种精度 不能大于6 如果不传默认为6
-     */
-    private Integer coinPrecision;
-
-    /**
      * 金额类型字段，表示传入的`amount`是法币金额还是币种数量。
      * `money_price` 法币金额
      * `coin_amount` 币种数量
@@ -37,7 +32,7 @@ public class PayoutCreateParams {
     private AmountType amountType;
 
     /**
-     * ISO 4217 3位字符的法币代码，这个法币代码将在收银台或其余地方展示价格字段。
+     * ISO 4217 3位字符的法币代码。
      */
     private String fiat;
 
