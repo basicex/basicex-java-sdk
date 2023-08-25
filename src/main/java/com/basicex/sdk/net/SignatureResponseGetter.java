@@ -5,6 +5,8 @@ import com.basicex.sdk.exception.*;
 import com.basicex.sdk.model.BasicexError;
 import com.basicex.sdk.model.BasicexObject;
 import com.basicex.sdk.util.PrivateKeyUtils;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import org.bouncycastle.util.encoders.Base64;
@@ -31,7 +33,7 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
     @Override
     public <T extends BasicexObject> T request(ApiResource.RequestMethod method, String path, Object params, Type typeToken, Boolean signRequest, RequestOptions options) throws BasicexException {
 
-        String fullUrl = String.format("%s%s", Optional.ofNullable(options).map(x->Optional.ofNullable(x.getApiBaseUrl()).orElse(config.getApiBaseUrl())).orElse(config.getApiBaseUrl()), path);
+        String fullUrl = String.format("%s%s", Optional.ofNullable(options).map(x -> Optional.ofNullable(x.getApiBaseUrl()).orElse(config.getApiBaseUrl())).orElse(config.getApiBaseUrl()), path);
         BasicexRequest request = new BasicexRequest(method, fullUrl, params, RequestOptions.merge(options, config));
         if (signRequest) {
             request.setHeaders(request.getHeaders().withAdditionalHeader("X-Signature", signature(params, path, request.getOptions())));
@@ -50,7 +52,7 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
         try {
             JsonObject jsonObject =
                     ApiResource.GSON.fromJson(response.getBody(), JsonObject.class).getAsJsonObject("data");
-            if(jsonObject != null) {
+            if (jsonObject != null) {
                 resource = ApiResource.GSON.fromJson(jsonObject, typeToken);
             }
         } catch (JsonSyntaxException e) {
@@ -64,7 +66,7 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
 
     @Override
     public InputStream requestStream(ApiResource.RequestMethod method, String path, Object params, Boolean signRequest, RequestOptions options) throws BasicexException {
-        String fullUrl = String.format("%s%s", Optional.ofNullable(options).map(x->Optional.ofNullable(x.getApiBaseUrl()).orElse(config.getApiBaseUrl())).orElse(config.getApiBaseUrl()), path);
+        String fullUrl = String.format("%s%s", Optional.ofNullable(options).map(x -> Optional.ofNullable(x.getApiBaseUrl()).orElse(config.getApiBaseUrl())).orElse(config.getApiBaseUrl()), path);
         BasicexRequest request = new BasicexRequest(method, fullUrl, params, RequestOptions.merge(options, config));
         if (signRequest) {
             request.getHeaders().withAdditionalHeader("X-Signature", signature(params, path, request.getOptions()));
@@ -121,13 +123,13 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
         switch (response.getCode()) {
             case 400:
             case 404:
-            exception = new InvalidRequestException(
-                            error.getMessage(),
-                            error.getParam(),
-                            response.getRequestId(),
-                            error.getCode(),
-                            response.getCode(),
-                            null);
+                exception = new InvalidRequestException(
+                        error.getMessage(),
+                        error.getParam(),
+                        response.getRequestId(),
+                        error.getCode(),
+                        response.getCode(),
+                        null);
                 break;
             case 401:
                 exception =

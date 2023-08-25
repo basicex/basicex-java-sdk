@@ -36,9 +36,8 @@ public class BasicExConfig {
     private volatile Proxy connectionProxy = null;
     private volatile PasswordAuthentication proxyCredential = null;
 
-    private volatile String apiBaseUrl = "http://192.168.31.67:7013";
-
-//    private volatile String apiBaseUrl = "http://192.168.31.125:7013";
+//    private volatile String apiBaseUrl = "http://192.168.31.67:7013";
+    private volatile String apiBaseUrl = "http://192.168.31.125:7013";
 
     private BasicExConfig() {}
 
