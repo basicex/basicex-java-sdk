@@ -34,11 +34,6 @@ public class PayoutCreateRequest {
     private Integer precision;
 
     /**
-     * 币种精度 不能大于6 如果不传默认为6
-     */
-    private Integer coinPrecision;
-
-    /**
      * 金额类型字段，表示传入的`amount`是法币金额还是币种数量。
      * `money_price` 法币金额
      * `coin_amount` 币种数量

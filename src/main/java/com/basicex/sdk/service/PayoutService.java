@@ -52,7 +52,6 @@ public class PayoutService extends ApiService {
                 .notificationUrl(params.getNotificationUrl())
                 .sendPaidNotification(params.getSendPaidNotification())
                 .physical(params.getPhysical())
-                .coinPrecision(params.getCoinPrecision())
                 .customerEmail(params.getCustomerEmail())
                 .description(params.getDescription())
                 .metadata(params.getMetadata())
