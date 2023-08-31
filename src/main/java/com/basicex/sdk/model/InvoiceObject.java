@@ -100,4 +100,14 @@ public class InvoiceObject extends BasicexObject {
      * 支付票据订单类型
      */
     private Integer type;
+
+    /**
+     * 支付票据的当前状态
+     */
+    private String status;
+
+    /**
+     * 票据支付收银台Web端地址
+     */
+    private String cashierUrl;
 }

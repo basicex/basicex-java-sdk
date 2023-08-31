@@ -19,12 +19,12 @@ public class InvoicePaymentInfo {
     /**
      * 是否允许支付
      */
-    private Boolean allowPayment;
+    private Boolean allowChainPayment;
 
     /**
      * 接收方地址
      */
-    private String recipientAddress;
+    private String payeeAddress;
 
     /**
      * 网络信息
@@ -44,5 +44,5 @@ public class InvoicePaymentInfo {
     /**
      * 收款地址过期时间，单位毫秒，需要在过期时间前完成支付或者重新刷新收款地址
      */
-    private Long recipientAddressExpireTime;
+    private Long payeeAddressExpireTime;
 }

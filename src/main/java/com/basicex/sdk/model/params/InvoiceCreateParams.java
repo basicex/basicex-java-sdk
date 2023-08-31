@@ -115,7 +115,6 @@ public class InvoiceCreateParams {
     private Boolean physical = false;
 
     public void checkParams() {
-        Preconditions.checkArgument(StringUtils.isNotEmpty(this.fiat), "fiat is required");
         Preconditions.checkArgument(StringUtils.isNotEmpty(this.orderId), "orderId is required");
         Preconditions.checkArgument(StringUtils.isNotEmpty(this.description), "description is required");
         Preconditions.checkArgument(StringUtils.isNotEmpty(this.notificationUrl), "notificationUrl is required");

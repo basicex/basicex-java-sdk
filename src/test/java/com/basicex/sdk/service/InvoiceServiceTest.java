@@ -34,16 +34,16 @@ public class InvoiceServiceTest extends BaseTest {
     @Test
     void createEmptyInvoiceTest() throws CertificateException, IOException, BasicexException {
         InvoiceObject invoice = getClient().invoices().create(InvoiceCreateParams.builder()
-                .fiat("USD")
+               .fiat("USD")
                 .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
                 .description("Test invoice:" + UUID.randomUUID().toString())
                 .buyerIp("127.0.0.1")
                 .notificationUrl("https://baidu.com")
                 .redirectUrl("https://baidu.com")
-                .amountType(AmountType.MONEY_PRICE)
-                // .currency("USDT")
+                .amountType(AmountType.COIN_AMOUNT)
+                .currency("USDT")
                 //.forcedChain(ChainNetwork.TRC20)
-                .amount(BigDecimal.valueOf(0.67))
+                .amount(BigDecimal.valueOf(12.1))
                 .build());
 
         Assertions.assertNotNull(invoice);
@@ -54,7 +54,7 @@ public class InvoiceServiceTest extends BaseTest {
 
     @Test
     void getInvoiceTest() throws CertificateException, IOException, BasicexException {
-        InvoiceObject invoice = getClient().invoices().get("40620230822134552202883210445009");
+        InvoiceObject invoice = getClient().invoices().get("40620230831171234553743040512291");
         Assertions.assertNotNull(invoice);
         Assertions.assertNotNull(invoice.getInvoiceId());
     }
@@ -101,8 +101,8 @@ public class InvoiceServiceTest extends BaseTest {
         Assertions.assertNotNull(invoice.getMetadata());
         Assertions.assertEquals(invoice.getMetadata().size(), 2);
         Assertions.assertNotNull(invoice.getPaymentInfo());
-        Assertions.assertEquals(invoice.getPaymentInfo().getAllowPayment(), true);
-        Assertions.assertNotNull(invoice.getPaymentInfo().getRecipientAddress());
+        Assertions.assertEquals(invoice.getPaymentInfo().getAllowChainPayment(), true);
+        Assertions.assertNotNull(invoice.getPaymentInfo().getPayeeAddress());
         Assertions.assertEquals(invoice.getPaymentInfo().getTotalAmount().compareTo(BigDecimal.TEN), 0);
 
         Assertions.assertThrows(BasicexException.class, () -> {
