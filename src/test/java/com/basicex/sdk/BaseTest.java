@@ -18,10 +18,10 @@ public abstract class BaseTest {
     // public String configPath = "D:\\dowloads\\003ec33e-8f0a-43f8-90f2-9577396dc2ac\\config.json";
 
     // 新的
-    public String configPath = "D:\\4d1ebd88-8154-4ca1-b1c6-051b7d28c204\\config.json";
+    // public String configPath = "D:\\4d1ebd88-8154-4ca1-b1c6-051b7d28c204\\config.json";
 
     // 徐哥的
-    // public String configPath = "D:\\ac2e6e63-49c0-424c-86c3-10144cce3437\\ac2e6e63-49c0-424c-86c3-10144cce3437\\config.json";
+    public String configPath = "D:\\1fbfcf88-7044-4fc6-a695-04388e3d13ea\\config.json";
 
     // 生产测试商户
     // public String configPath = "D:\\production_test\\config.json";

@@ -18,8 +18,8 @@ import lombok.Getter;
 public enum ChainNetwork {
     TRC20("TRC20"),
     ERC20("ERC20"),
-    POLYGON("Polygon"),
-    BSC("BSC");
+    POLYGON("MATIC"),
+    BSC("BEP20");
 
     private String code;
 }

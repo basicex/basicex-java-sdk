@@ -34,16 +34,16 @@ public class InvoiceServiceTest extends BaseTest {
     @Test
     void createEmptyInvoiceTest() throws CertificateException, IOException, BasicexException {
         InvoiceObject invoice = getClient().invoices().create(InvoiceCreateParams.builder()
-               .fiat("USD")
+                .fiat("USD")
                 .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
                 .description("Test invoice:" + UUID.randomUUID().toString())
                 .buyerIp("127.0.0.1")
                 .notificationUrl("https://baidu.com")
                 .redirectUrl("https://baidu.com")
-                .amountType(AmountType.COIN_AMOUNT)
-                .currency("USDT")
-                //.forcedChain(ChainNetwork.TRC20)
-                .amount(BigDecimal.valueOf(12.1))
+                .amountType(AmountType.MONEY_PRICE)
+                //.currency("USDT")
+                //.forcedChain(ChainNetwork.BSC)
+                .amount(BigDecimal.valueOf(12.32))
                 .build());
 
         Assertions.assertNotNull(invoice);
