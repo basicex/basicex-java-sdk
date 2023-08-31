@@ -16,7 +16,7 @@
 
     <groupId>com.basicex</groupId>
     <artifactId>basicex-java</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.2</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
