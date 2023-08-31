@@ -108,6 +108,35 @@ public class InvoiceService extends ApiService {
     }
 
     /**
+     * 根据商户订单ID获取支付票据信息
+     * @param orderID 商户订单ID
+     * @return 支付票据信息
+     * @throws BasicexException
+     */
+    public InvoiceObject getByMerchantOrderId(String orderID) throws BasicexException {
+        return getByMerchantOrderId(orderID, null);
+    }
+
+    /**
+     * 根据商户订单ID获取支付票据信息
+     * @param orderID 商户订单ID
+     * @param options 请求选项
+     * @return 支付票据信息
+     * @throws BasicexException
+     */
+    public InvoiceObject getByMerchantOrderId(String orderID, RequestOptions options) throws BasicexException {
+        String path = String.format("/invoices/merchant/%s", orderID);
+        return getResponseGetter().request(
+                ApiResource.RequestMethod.GET,
+                path,
+                null,
+                InvoiceObject.class,
+                true,
+                options
+        );
+    }
+
+    /**
      * 根据支付票据ID更新支付票据信息
      * @param invoiceID 支付票据ID
      * @param params 更新参数
