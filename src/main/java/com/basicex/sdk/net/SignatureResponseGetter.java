@@ -5,8 +5,6 @@ import com.basicex.sdk.exception.*;
 import com.basicex.sdk.model.BasicexError;
 import com.basicex.sdk.model.BasicexObject;
 import com.basicex.sdk.util.PrivateKeyUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import org.bouncycastle.util.encoders.Base64;

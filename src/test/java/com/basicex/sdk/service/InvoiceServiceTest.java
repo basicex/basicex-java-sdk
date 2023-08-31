@@ -24,17 +24,22 @@ public class InvoiceServiceTest extends BaseTest {
     @Test
     void createEmptyInvoiceTest() throws CertificateException, IOException, BasicexException {
         InvoiceObject invoice = getClient().invoices().create(InvoiceCreateParams.builder()
-                .fiat("USD")
-                .orderId(UUID.randomUUID().toString())
+                .fiat("CNY")
+                .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
                 .description("Test invoice:" + UUID.randomUUID().toString())
                 .buyerIp("127.0.0.1")
-                .notificationUrl("https://google.com")
+                .notificationUrl("https://baidu.com")
+                .redirectUrl("https://baidu.com")
                 .amountType(AmountType.MONEY_PRICE)
-                .amount(BigDecimal.valueOf(1000000))
+                // .currency("BCNY")
+                //.forcedChain(ChainNetwork.TRC20)
+                .amount(BigDecimal.valueOf(0.01))
                 .build());
 
         Assertions.assertNotNull(invoice);
         Assertions.assertNotNull(invoice.getInvoiceId());
+
+        System.out.println(invoice.getInvoiceId());
     }
 
     @Test
