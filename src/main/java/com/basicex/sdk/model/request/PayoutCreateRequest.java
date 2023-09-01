@@ -121,5 +121,5 @@ public class PayoutCreateRequest {
     /**
      * 网络 当为外链的时候必填
      */
-    private String netWork;
+    private String network;
 }

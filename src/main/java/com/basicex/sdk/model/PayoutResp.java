@@ -8,25 +8,71 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.basicex.sdk;
+package com.basicex.sdk.model;
 
-import java.io.IOException;
-import java.security.cert.CertificateException;
+import java.math.BigDecimal;
+import java.util.Map;
 
-public abstract class BaseTest {
-    // public String configPath = "D:\\70f1ad61-cb4b-4970-bf34-b0a79bfa6e92\\config.json";
-    // public String configPath = "D:\\dowloads\\003ec33e-8f0a-43f8-90f2-9577396dc2ac\\config.json";
+public class PayoutResp extends BasicexObject {
+    /**
+     * 商户订单号
+     */
+    private String merOrderNo;
 
-    // 新的
-//     public String configPath = "D:\\dowloads\\1fbfcf88-7044-4fc6-a695-04388e3d13ea\\config.json";
+    /**
+     * 系统订单号
+     */
+    private String orderNo;
 
-    // 徐哥的
-    // public String configPath = "D:\\ac2e6e63-49c0-424c-86c3-10144cce3437\\ac2e6e63-49c0-424c-86c3-10144cce3437\\config.json";
+    /**
+     * 代付对象类型
+     */
+    private String targetType;
 
-    // 生产测试商户
-//    public String configPath = "D:\\production_test\\config.json";
-    public String configPath = "D:\\dowloads\\zhimaDADA\\f22c4d55-6670-4368-82fa-a8a55e664bfd\\config.json";
-    public BasicExClient getClient() throws CertificateException, IOException {
-        return new BasicExClient(configPath);
-    }
+    /**
+     * 代付对象（email/手机号/币趣id/用户名）
+     */
+    private String target;
+
+    /**
+     * 订单金额
+     */
+    private BigDecimal actualAmount;
+
+    /**
+     * 币种 支持USDT BUSD
+     */
+    private String currency;
+
+    /**
+     * 网络 TRC20 BSC ERC20 Polygon
+     * 当targetType为address时必传
+     */
+    private String network;
+
+    /**
+     * 代付描述
+     */
+    private String description;
+
+    /**
+     * 交易完成时间
+     */
+    private Long tradeFinishTime;
+
+    /**
+     * 附加数据v2
+     */
+    private Map<String, String> metadata;
+
+    /**
+     * 状态
+     */
+    private String status;
+
+    /**
+     * 交易订单号
+     */
+    private String transactionId;
+
 }

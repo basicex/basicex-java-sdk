@@ -15,6 +15,7 @@ import com.basicex.sdk.BaseTest;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.PayoutObject;
+import com.basicex.sdk.model.PayoutResp;
 import com.basicex.sdk.model.params.InvoiceCreateParams;
 import com.basicex.sdk.model.params.PayoutCreateParams;
 import com.basicex.sdk.model.params.constant.AmountType;
@@ -43,8 +44,7 @@ public class PayoutServiceTest extends BaseTest {
         PayoutCreateParams params = PayoutCreateParams.builder()
                 .amount(new BigDecimal(5))
                 .amountType(AmountType.MONEY_PRICE)
-                .fiat("USD")
-                .currency("BTC")
+                .currency("USDT")
                 .customerEmail("3021494730@qq.com")
                 .notificationUrl("https://192.168.31.125:7013/notify/test")
                 .description("TEST PAYOUT SDK")
@@ -53,12 +53,18 @@ public class PayoutServiceTest extends BaseTest {
                 .customerIp("192.168.31.125")
                 .physical(Boolean.TRUE)
                 .targetType("ADDRESS")
-                .target("TLeozhe6ozXW88vKnvkfF3Xmo9JrnbNfpZ")
-                .netWork(NetWorkType.ERC20.code)
+                .target("0x682D39Ea8d26510BE379d30807AF61e5eF9E269b")
+                .network(NetWorkType.ERC20.code)
                 .merOrderNo(UUID.randomUUID().toString().replace("-", ""))
                 .build();
         PayoutObject payoutObject = payout.create(params);
         System.out.println(payoutObject);
-
     }
+
+    @Test
+    void getPayoutTest() throws CertificateException, IOException, BasicexException {
+        PayoutResp payoutResp = getClient().payouts().get("40820230901144009956759386521860");
+        System.out.println(payoutResp);
+    }
+
 }

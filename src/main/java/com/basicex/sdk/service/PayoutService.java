@@ -13,6 +13,7 @@ package com.basicex.sdk.service;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.PayoutObject;
+import com.basicex.sdk.model.PayoutResp;
 import com.basicex.sdk.model.params.PayoutCreateParams;
 import com.basicex.sdk.model.request.PayoutCreateRequest;
 import com.basicex.sdk.net.ApiResource;
@@ -24,7 +25,7 @@ import java.math.BigDecimal;
 
 public class PayoutService extends ApiService {
 
-    private static final String url = "/payout";
+    private static final String url = "/payouts";
 
     public PayoutService(BasicexResponseGetter responseGetter) {
         super(responseGetter);
@@ -58,7 +59,6 @@ public class PayoutService extends ApiService {
                     .amountType(params.getAmountType().getCode());
         }
         payoutRequestBuilder
-                .fiat(params.getFiat())
                 .currency(params.getCurrency())
                 .metadata(params.getMetadata())
                 .notificationUrl(params.getNotificationUrl())
@@ -73,16 +73,44 @@ public class PayoutService extends ApiService {
                 .targetType(params.getTargetType())
                 .target(params.getTarget())
                 .merOrderNo(params.getMerOrderNo())
-                .netWork(params.getNetWork());
+                .network(params.getNetwork());
 
         return getResponseGetter().request(
                 ApiResource.RequestMethod.POST,
                 url,
                 payoutRequestBuilder.build(),
-                new TypeReference<PayoutObject>(){},
+                new TypeReference<PayoutObject>() {
+                },
                 true,
                 options);
+    }
 
+    /**
+     * 根据平台订单号或者商户订单号查询代付信息
+     *
+     * @param orderNo 平台订单号或者商户订单号
+     * @throws BasicexException
+     */
+    public PayoutResp get(String orderNo) throws BasicexException {
+        return get(orderNo, null);
+    }
+
+    /**
+     * 根据平台订单号或者商户订单号查询代付信息
+     *
+     * @param orderNo 平台订单号或者商户订单号
+     * @throws BasicexException
+     */
+    public PayoutResp get(String orderNo, RequestOptions options) throws BasicexException {
+        String path = String.format("/payouts/%s", orderNo);
+        return getResponseGetter().request(
+                ApiResource.RequestMethod.GET,
+                path,
+                null,
+                new TypeReference<PayoutResp>() {
+                },
+                true,
+                options);
     }
 
 }
