@@ -10,18 +10,14 @@
 
 package com.basicex.sdk.service;
 
-
-import com.basicex.sdk.BaseTest;
+import com.basicex.sdk.BasicExClient;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.PayoutObject;
-import com.basicex.sdk.model.PayoutResp;
 import com.basicex.sdk.model.params.InvoiceCreateParams;
 import com.basicex.sdk.model.params.PayoutCreateParams;
 import com.basicex.sdk.model.params.constant.AmountType;
 import com.basicex.sdk.model.params.constant.NetWorkType;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -30,12 +26,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class PayoutServiceTest extends BaseTest {
-
-
-    @Test
-    public void createPayoutTest() throws CertificateException, IOException, BasicexException {
-        PayoutService payout = getClient().payouts();
+public class BasicExPayoutsTest {
+    private static String configPath = "~/4d1ebd88-8154-4ca1-b1c6-051b7d28c204/config.json";
+    public static void main(String[] args) throws CertificateException, IOException, BasicexException {
+        BasicExClient client = new BasicExClient(configPath);
+        PayoutService payout = client.payouts();
         Map<String, String> map = new HashMap<>();
         map.put("desc", "Hello,BasicEx");
 
@@ -54,11 +49,4 @@ public class PayoutServiceTest extends BaseTest {
         PayoutObject payoutObject = payout.create(params);
         System.out.println(payoutObject);
     }
-
-    @Test
-    void getPayoutTest() throws CertificateException, IOException, BasicexException {
-        PayoutResp payoutResp = getClient().payouts().get("40820230901144009956759386521860");
-        System.out.println(payoutResp);
-    }
-
 }

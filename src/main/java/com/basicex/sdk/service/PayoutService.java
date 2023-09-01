@@ -55,8 +55,7 @@ public class PayoutService extends ApiService {
         PayoutCreateRequest.PayoutCreateRequestBuilder payoutRequestBuilder = PayoutCreateRequest.builder();
         if (params.getAmount() != null) {
             payoutRequestBuilder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(params.getAmount().scale())).toBigInteger())
-                    .precision(params.getAmount().scale())
-                    .amountType(params.getAmountType().getCode());
+                    .precision(params.getAmount().scale());
         }
         payoutRequestBuilder
                 .currency(params.getCurrency())
@@ -67,7 +66,6 @@ public class PayoutService extends ApiService {
                 .customerEmail(params.getCustomerEmail())
                 .description(params.getDescription())
                 .metadata(params.getMetadata())
-                .source(params.getSource())
                 .customerIp(params.getCustomerIp())
                 .physical(params.getPhysical())
                 .targetType(params.getTargetType())

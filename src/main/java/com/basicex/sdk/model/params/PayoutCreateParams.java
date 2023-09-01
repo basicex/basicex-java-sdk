@@ -35,13 +35,6 @@ public class PayoutCreateParams {
     private BigDecimal amount;
 
     /**
-     * 金额类型字段，表示传入的`amount`是法币金额还是币种数量。
-     * `money_price` 法币金额
-     * `coin_amount` 币种数量
-     */
-    private AmountType amountType;
-
-    /**
      * 支付的区块链币种，例如: USDT, BTC等
      */
     private String currency;
@@ -65,11 +58,6 @@ public class PayoutCreateParams {
      * 传入的结构化元数据，用于商户本身记录相应的数据。该字段将在后续原样返回
      */
     private Map<String, String> metadata;
-
-    /**
-     * 支付来源
-     */
-    private String source;
 
     /**
      * 商户侧客户端IP
@@ -116,13 +104,5 @@ public class PayoutCreateParams {
         Preconditions.checkArgument(StringUtils.isNotEmpty(this.targetType), "targetType is required");
         Preconditions.checkArgument(StringUtils.isNotEmpty(this.description), "description is required");
         Preconditions.checkArgument(StringUtils.isNotEmpty(this.notificationUrl), "notificationUrl is required");
-
-        if (this.amountType != null) {
-            Preconditions.checkArgument(this.amount != null, "amount is required");
-            if (this.amountType.equals(AmountType.COIN_AMOUNT) && StringUtils.isEmpty(this.currency)) {
-                throw new IllegalArgumentException("currency is required");
-            }
-        }
-
     }
 }
