@@ -51,8 +51,9 @@ public class WebhookService extends ApiService {
     /**
      * 验证Webhook请求是否合规
      * @param request Webhook请求
+     * @param notificationUrl Webhook通知地址
      */
-    public WebhookEvent<?> validate(HttpServletRequest request) throws BasicexException, IOException {
+    public WebhookEvent<?> validate(HttpServletRequest request, String notificationUrl) throws BasicexException, IOException {
         if(request.getHeader("X-Webhook-Signature") == null || request.getHeader("X-Webhook-Signature-Serial") == null) {
             throw new SignatureException("Webhook请求头缺少X-Webhook-Signature或X-Webhook-Signature-Serial", null, null, null);
         }
@@ -60,18 +61,19 @@ public class WebhookService extends ApiService {
         String signature = request.getHeader("X-Webhook-Signature");
         String serial = request.getHeader("X-Webhook-Signature-Serial");
 
-        return validate(httpServletRequestToString(request), signature, serial);
+        return validate(httpServletRequestToString(request), notificationUrl, signature, serial);
     }
 
     /**
      * 验证Webhook请求是否合规
      * @param requestBody Webhook请求体
+     * @param notificationUrl Webhook通知地址
      * @param signature Webhook请求头中的X-Webhook-Signature
      * @param certificateSerialNo Webhook请求头中的X-Webhook-Signature-Serial
      */
-    public WebhookEvent<?> validate(String requestBody, String signature, String certificateSerialNo) throws BasicexException {
+    public WebhookEvent<?> validate(String requestBody, String notificationUrl, String signature, String certificateSerialNo) throws BasicexException {
         X509Certificate certificate = getPlatformCertificate(Objects.requireNonNull(certificateSerialNo));
-        if(!validateSignature(requestBody.getBytes(), Base64.decode(signature), certificate)) {
+        if(!validateSignature(String.format("%s%s", notificationUrl, requestBody).getBytes(), Base64.decode(signature), certificate)) {
             throw new SignatureException("Signature verification failure, illegal webhook request", null, null, null);
         }
 
@@ -87,13 +89,15 @@ public class WebhookService extends ApiService {
         TypeReference<?> typeToken = null;
         switch (type) {
             case INVOICE_COMPLETED:
-                typeToken = new TypeReference<InvoiceCompletedWebhookMessage>(){};
+                typeToken = new TypeReference<WebhookEvent<InvoiceCompletedWebhookMessage>>(){};
+                break;
             case INVOICE_PAID:
-                typeToken = new TypeReference<InvoicePaidWebhookMessage>(){};
+                typeToken = new TypeReference<WebhookEvent<InvoicePaidWebhookMessage>>(){};
                 break;
             case PAYOUT_FAILED:
             case PAYOUT_SUCCESS:
-                typeToken = new TypeReference<PayoutWebhookMessage>(){};
+                typeToken = new TypeReference<WebhookEvent<PayoutWebhookMessage>>(){};
+                break;
         }
 
         if(typeToken == null) {
