@@ -42,9 +42,9 @@ public class InvoiceServiceTest extends BaseTest {
                 .notificationUrl("https://baidu.com")
                 .redirectUrl("https://baidu.com")
                 .amountType(AmountType.MONEY_PRICE)
-//                .currency("USDT")
+                //.currency("BUSD")
 //                .forcedChain(ChainNetwork.BSC)
-                .amount(BigDecimal.valueOf(8.88))
+                .amount(BigDecimal.valueOf(12))
                 .build());
 
         Assertions.assertNotNull(invoice);

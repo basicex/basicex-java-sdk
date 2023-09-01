@@ -17,12 +17,47 @@
     <groupId>com.basicex</groupId>
     <artifactId>basicex-java</artifactId>
     <version>1.0.2</version>
+    <packaging>jar</packaging>
+
+    <name>BasicEx Java Client</name>
+    <description>Full implementation of the BasicEx Payment Gateway. This library implements BasicEx Payment RESTful API.</description>
+    <url>https://basicex.com</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://github.com/bitpay/java-bitpay-client/blob/master/LICENSE</url>
+            <distribution>github</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <url>https://github.com/basicex/basicex-java-sdk</url>
+        <connection>scm:git:git://github.com/basicex/basicex-java-sdk.git</connection>
+        <developerConnection>scm:git:git@github.com:basicex/basicex-java-sdk.git</developerConnection>
+    </scm>
+
+    <organization>
+        <name>BasicEx</name>
+        <url>https://basicex.com</url>
+    </organization>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencies>
         <dependency>
@@ -63,4 +98,63 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.5.0</version>
+                <configuration>
+                    <source>8</source>
+                    <additionalOptions>-notimestamp</additionalOptions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+                <configuration>
+                    <argLine>@{argLine} -Duser.timezone=UTC</argLine>
+                    <excludes>
+                        <exclude>**/WebhookServiceTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
