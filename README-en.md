@@ -3,39 +3,39 @@
 
 [English](./README-en.md) | [简体中文](./README.md)
 
-该Java SDK完整实现了币趣支付网关中的RESTful接口
+Full implementation of the BasicEx Payment Gateway. This library implements BasicEx Payment RESTful API.
 
-## 安装
+## Installation
 
-### 必须
+### Requirements
 
-- Java 1.8 或更高.
+- Java 1.8 or higher.
 
-### Gradle使用
+### Gradle users
 
-添加这个依赖到你的项目的构建文件:
+Add this dependency to your project's build file:
 
 ```groovy
 implementation "com.basicex:basicex-java:1.0.2"
 ```
 
-### Maven使用
+### Maven users
 
-添加这个依赖到你的项目的pom.xml文件:
+Add this dependency to your project's POM:
 
 ```xml
 <dependency>
-    <groupId>com.basicex</groupId>
-    <artifactId>basicex-java</artifactId>
-    <version>1.0.2</version>
+  <groupId>com.basicex</groupId>
+  <artifactId>basicex-java</artifactId>
+  <version>1.0.2</version>
 </dependency>
 ```
 
-## 文档
+## Documentation
 
-### 使用
+### Usage
 
-#### 创建一个新票据
+#### Create an invoice
 
 ```java
 import com.basicex.sdk.BasicExClient;
@@ -56,9 +56,9 @@ public class BasicExTest{
         InvoiceObject invoiceObject = client.invoices().create(InvoiceCreateParams.builder()
                 .redirectUrl("https://basicex.com")
                 .notificationUrl("https://basicex.com/notify")
-                .currency("USDT")
+                .fiat("USD")
                 .amount(new BigDecimal("10.25"))
-                .amountType(AmountType.COIN_AMOUNT)
+                .amountType(AmountType.MONEY_PRICE)
                 .orderId(UUID.randomUUID().toString())
                 .description("Hello, BasicEx")
                 .build());
@@ -67,4 +67,5 @@ public class BasicExTest{
         System.out.println(cashierUrl);
     }
 }
+
 ```
