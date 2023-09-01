@@ -41,10 +41,10 @@ public class InvoiceServiceTest extends BaseTest {
                 .buyerIp("127.0.0.1")
                 .notificationUrl("https://baidu.com")
                 .redirectUrl("https://baidu.com")
-                .amountType(AmountType.COIN_AMOUNT)
-                .currency("BUSD")
+                .amountType(AmountType.MONEY_PRICE)
+//                .currency("BUSD")
                 //.forcedChain(ChainNetwork.BSC)
-                .amount(BigDecimal.valueOf(13.8))
+                .amount(BigDecimal.valueOf(15.0))
                 .build());
 
         Assertions.assertNotNull(invoice);

@@ -42,11 +42,6 @@ public class PayoutCreateParams {
     private AmountType amountType;
 
     /**
-     * ISO 4217 3位字符的法币代码。
-     */
-    private String fiat;
-
-    /**
      * 支付的区块链币种，例如: USDT, BTC等
      */
     private String currency;
@@ -112,11 +107,10 @@ public class PayoutCreateParams {
     /**
      * 网络 当为外链的时候必填
      */
-    private String netWork;
+    private String network;
 
 
     public void checkParams() {
-        Preconditions.checkArgument(StringUtils.isNotEmpty(this.fiat), "fiat is required");
         Preconditions.checkArgument(StringUtils.isNotEmpty(this.target), "target is required");
         Preconditions.checkArgument(StringUtils.isNotEmpty(this.currency), "currency is required");
         Preconditions.checkArgument(StringUtils.isNotEmpty(this.targetType), "targetType is required");
