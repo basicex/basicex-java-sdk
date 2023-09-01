@@ -68,3 +68,49 @@ public class BasicExTest{
     }
 }
 ```
+
+#### 创建一个代付请求:
+
+```java
+import com.basicex.sdk.BasicExClient;
+import com.basicex.sdk.exception.BasicexException;
+import com.basicex.sdk.model.InvoiceObject;
+import com.basicex.sdk.model.PayoutObject;
+import com.basicex.sdk.model.params.InvoiceCreateParams;
+import com.basicex.sdk.model.params.PayoutCreateParams;
+import com.basicex.sdk.model.params.constant.AmountType;
+import com.basicex.sdk.model.params.constant.NetWorkType;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.security.cert.CertificateException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+public class BasicExPayoutsTest {
+    private static String configPath = "~/4d1ebd88-8154-4ca1-b1c6-051b7d28c204/config.json";
+    public static void main(String[] args) throws CertificateException, IOException, BasicexException {
+        BasicExClient client = new BasicExClient(configPath);
+        PayoutService payout = client.payouts();
+        Map<String, String> map = new HashMap<>();
+       	map.put("desc", "Hello,BasicEx");
+
+        PayoutCreateParams params = PayoutCreateParams.builder()
+                .amount(new BigDecimal(5))
+                .currency("USDT")
+                .notificationUrl("https://basicex.com/notify")
+                .description("TEST PAYOUT SDK")
+                .metadata(map)
+                .physical(Boolean.TRUE)
+                .targetType("ADDRESS")
+                .target("0x682D39Ea8d26510BE379d30807AF61e5eF9E2XXX")
+                .network(NetWorkType.ERC20.code)
+                .merOrderNo(UUID.randomUUID().toString().replace("-", ""))
+                .build();
+        PayoutObject payoutObject = payout.create(params);
+        System.out.println(payoutObject);
+    }
+}
+```
+
