@@ -28,9 +28,7 @@ import java.util.Map;
 public class PayoutCreateParams {
 
     /**
-     * 代付金额，该支付金额将根据`amount_type`字段进行判断。
-     * 如果`amount_type`字段为`money_price`，则该字段为法币金额，例如: 2.00 USD
-     * 如果`amount_type`字段为`coin_amount`，则该字段为币种数量，例如: 2.00 USDT
+     * 代付金额
      */
     private BigDecimal amount;
 
@@ -63,14 +61,6 @@ public class PayoutCreateParams {
      * 商户侧客户端IP
      */
     private String customerIp;
-
-    /**
-     * 是否发送已支付状态的通知数据。默认为false
-     * 如果设置为true，当我们在区块链上收到用户的款项且有一个块确认后。我们将发送`paid`状态通知
-     * 基于区块链特性，这并不意味着这笔订单完全有效。我们内部将会有一个确认机制，当我们确认该笔
-     * 交易完全不可逆后，将发送`complete`状态通知，`paid`状态转`complete`状态可能需要一些时间。
-     */
-    private Boolean sendPaidNotification = false;
 
     /**
      * 是否是实物商品，而非虚拟商品或服务

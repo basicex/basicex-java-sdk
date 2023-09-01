@@ -40,7 +40,7 @@ public class PayoutServiceTest extends BaseTest {
         map.put("desc", "Hello,BasicEx");
 
         PayoutCreateParams params = PayoutCreateParams.builder()
-                .amount(new BigDecimal(5))
+                .amount(new BigDecimal(24))
                 .currency("USDT")
                 .notificationUrl("https://basicex.com/notify")
                 .description("TEST PAYOUT SDK")

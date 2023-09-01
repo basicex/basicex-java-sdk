@@ -10,10 +10,13 @@
 
 package com.basicex.sdk.model;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Map;
 
+@Data
 public class PayoutObject extends BasicexObject {
 
     /**
@@ -27,8 +30,7 @@ public class PayoutObject extends BasicexObject {
     private String merOrderNo;
 
     /**
-     * 金额字段，该字段为整数格式。即如果用户支付$2.00.则这里传入200
-     * 该字段根据`amountType`字段判断传入的是法币金额还是数字货币金额
+     * 金额字段
      */
     private BigInteger amount;
 
