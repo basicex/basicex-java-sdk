@@ -33,7 +33,7 @@ Add this dependency to your project's POM:
 
 ### Usage
 
-#### Create a new invoice
+#### Create an invoice
 
 ```java
 import com.basicex.sdk.BasicExClient;
