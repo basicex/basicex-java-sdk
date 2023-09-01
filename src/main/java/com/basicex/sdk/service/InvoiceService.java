@@ -55,9 +55,15 @@ public class InvoiceService extends ApiService {
         // 构建请求
         InvoiceCreateRequest.InvoiceCreateRequestBuilder builder = InvoiceCreateRequest.builder();
         if(params.getAmount() != null) {
-            builder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(params.getAmount().scale())).toBigInteger())
-                    .precision(params.getAmount().scale())
-                    .amountType(params.getAmountType().getCode());
+            if(params.getAmount().scale() == 0) {
+                builder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(2)).toBigInteger())
+                        .precision(2);
+            } else {
+                builder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(params.getAmount().scale())).toBigInteger())
+                        .precision(params.getAmount().scale());
+            }
+
+            builder.amountType(params.getAmountType().getCode());
         }
         builder.buyerId(params.getBuyerId())
                 .orderId(params.getOrderId())
