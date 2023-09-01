@@ -8,35 +8,37 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.basicex.sdk.net;
+package com.basicex.sdk.service;
 
 import com.basicex.sdk.exception.BasicexException;
-import com.basicex.sdk.model.BasicexObject;
+import com.basicex.sdk.exception.SignatureException;
+import com.basicex.sdk.net.BasicexResponseGetter;
 
-import java.lang.reflect.Type;
-import java.io.InputStream;
+import javax.servlet.http.HttpServletRequest;
 
-public interface BasicexResponseGetter {
-    <T> T request(
-            ApiResource.RequestMethod method,
-            String path,
-            Object params,
-            TypeReference<T> typeToken,
-            Boolean signRequest,
-            RequestOptions options)
-            throws BasicexException;
-
-    InputStream requestStream(
-            ApiResource.RequestMethod method,
-            String path,
-            Object params,
-            Boolean signRequest,
-            RequestOptions options)
-            throws BasicexException;
+/**
+ * Webhook Service
+ */
+public class WebhookService extends ApiService {
+    private final PlatformService platformService;
+    public WebhookService(BasicexResponseGetter responseGetter) {
+        super(responseGetter);
+        this.platformService = new PlatformService(responseGetter);
+    }
 
     /**
-     * This method should e.g. throws an ApiKeyMissingError if a proper API Key cannot be determined
-     * by the ResponseGetter or from the RequestOptions passed in.
+     * 验证Webhook请求是否合规
+     * @param request Webhook请求
      */
-    default void validateRequestOptions(RequestOptions options) {}
+    public void validate(HttpServletRequest request) throws BasicexException {
+        if(request.getHeader("X-Webhook-Signature") == null || request.getHeader("X-Webhook-Signature-Serial") == null) {
+            throw new SignatureException("Webhook请求头缺少X-Webhook-Signature或X-Webhook-Signature-Serial", null, null, null);
+        }
+
+        String signature = request.getHeader("X-Webhook-Signature");
+        String serial = request.getHeader("X-Webhook-Signature-Serial");
+
+        // 获取平台证书
+        platformService.certificates();
+    }
 }

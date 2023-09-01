@@ -34,7 +34,7 @@ public class PayoutServiceTest extends BaseTest {
 
     @Test
     public void createPayoutTest() throws CertificateException, IOException, BasicexException {
-        PayoutService payout = getClient().payout();
+        PayoutService payout = getClient().payouts();
         Map<String, String> map = new HashMap<>();
         map.put("name", "zhimaDADA");
         map.put("money", "200000000");

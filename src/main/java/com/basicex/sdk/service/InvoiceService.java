@@ -20,6 +20,7 @@ import com.basicex.sdk.model.request.InvoiceUpdateRequest;
 import com.basicex.sdk.net.ApiResource;
 import com.basicex.sdk.net.BasicexResponseGetter;
 import com.basicex.sdk.net.RequestOptions;
+import com.basicex.sdk.net.TypeReference;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -77,7 +78,7 @@ public class InvoiceService extends ApiService {
                 ApiResource.RequestMethod.POST,
                 path,
                 builder.build(),
-                InvoiceObject.class,
+                new TypeReference<InvoiceObject>(){},
                 true,
                 options);
     }
@@ -102,7 +103,7 @@ public class InvoiceService extends ApiService {
                 ApiResource.RequestMethod.GET,
                 path,
                 null,
-                InvoiceObject.class,
+                new TypeReference<InvoiceObject>(){},
                 true,
                 options);
     }
@@ -130,7 +131,7 @@ public class InvoiceService extends ApiService {
                 ApiResource.RequestMethod.GET,
                 path,
                 null,
-                InvoiceObject.class,
+                new TypeReference<InvoiceObject>(){},
                 true,
                 options
         );
@@ -175,7 +176,7 @@ public class InvoiceService extends ApiService {
                 ApiResource.RequestMethod.PUT,
                 path,
                 builder.build(),
-                InvoiceObject.class,
+                new TypeReference<InvoiceObject>(){},
                 true,
                 options);
     }

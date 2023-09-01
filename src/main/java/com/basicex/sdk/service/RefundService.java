@@ -11,12 +11,14 @@
 package com.basicex.sdk.service;
 
 import com.basicex.sdk.exception.BasicexException;
+import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.RefundObject;
 import com.basicex.sdk.model.params.RefundCreateParams;
 import com.basicex.sdk.model.request.RefundCreateRequest;
 import com.basicex.sdk.net.ApiResource;
 import com.basicex.sdk.net.BasicexResponseGetter;
 import com.basicex.sdk.net.RequestOptions;
+import com.basicex.sdk.net.TypeReference;
 
 import java.math.BigDecimal;
 
@@ -69,7 +71,7 @@ public class RefundService extends ApiService {
                 ApiResource.RequestMethod.POST,
                 url,
                 refundRequestBuilder.build(),
-                RefundObject.class,
+                new TypeReference<RefundObject>(){},
                 true,
                 options);
 

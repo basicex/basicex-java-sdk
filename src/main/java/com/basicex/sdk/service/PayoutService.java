@@ -11,12 +11,14 @@
 package com.basicex.sdk.service;
 
 import com.basicex.sdk.exception.BasicexException;
+import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.PayoutObject;
 import com.basicex.sdk.model.params.PayoutCreateParams;
 import com.basicex.sdk.model.request.PayoutCreateRequest;
 import com.basicex.sdk.net.ApiResource;
 import com.basicex.sdk.net.BasicexResponseGetter;
 import com.basicex.sdk.net.RequestOptions;
+import com.basicex.sdk.net.TypeReference;
 
 import java.math.BigDecimal;
 
@@ -77,7 +79,7 @@ public class PayoutService extends ApiService {
                 ApiResource.RequestMethod.POST,
                 url,
                 payoutRequestBuilder.build(),
-                PayoutObject.class,
+                new TypeReference<PayoutObject>(){},
                 true,
                 options);
 

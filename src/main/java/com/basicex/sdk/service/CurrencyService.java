@@ -8,35 +8,7 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.basicex.sdk.net;
+package com.basicex.sdk.service;
 
-import com.basicex.sdk.exception.BasicexException;
-import com.basicex.sdk.model.BasicexObject;
-
-import java.lang.reflect.Type;
-import java.io.InputStream;
-
-public interface BasicexResponseGetter {
-    <T> T request(
-            ApiResource.RequestMethod method,
-            String path,
-            Object params,
-            TypeReference<T> typeToken,
-            Boolean signRequest,
-            RequestOptions options)
-            throws BasicexException;
-
-    InputStream requestStream(
-            ApiResource.RequestMethod method,
-            String path,
-            Object params,
-            Boolean signRequest,
-            RequestOptions options)
-            throws BasicexException;
-
-    /**
-     * This method should e.g. throws an ApiKeyMissingError if a proper API Key cannot be determined
-     * by the ResponseGetter or from the RequestOptions passed in.
-     */
-    default void validateRequestOptions(RequestOptions options) {}
+public class CurrencyService {
 }

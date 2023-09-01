@@ -13,6 +13,7 @@ package com.basicex.sdk.service;
 
 import com.basicex.sdk.BaseTest;
 import com.basicex.sdk.BasicExClient;
+import com.basicex.sdk.BasicExConfig;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.params.InvoiceCreateParams;
@@ -40,10 +41,10 @@ public class InvoiceServiceTest extends BaseTest {
                 .buyerIp("127.0.0.1")
                 .notificationUrl("https://baidu.com")
                 .redirectUrl("https://baidu.com")
-                .amountType(AmountType.MONEY_PRICE)
-                //.currency("USDT")
+                .amountType(AmountType.COIN_AMOUNT)
+                .currency("BUSD")
                 //.forcedChain(ChainNetwork.BSC)
-                .amount(BigDecimal.valueOf(12.32))
+                .amount(BigDecimal.valueOf(13.8))
                 .build());
 
         Assertions.assertNotNull(invoice);

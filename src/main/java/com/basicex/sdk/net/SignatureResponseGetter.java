@@ -13,15 +13,16 @@ package com.basicex.sdk.net;
 import com.basicex.sdk.BasicExConfig;
 import com.basicex.sdk.exception.*;
 import com.basicex.sdk.model.BasicexError;
-import com.basicex.sdk.model.BasicexObject;
 import com.basicex.sdk.util.PrivateKeyUtils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import org.bouncycastle.util.encoders.Base64;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
+import java.lang.reflect.ParameterizedType;
+import java.util.List;
 import java.util.Optional;
 
 public class SignatureResponseGetter implements BasicexResponseGetter {
@@ -39,7 +40,7 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
 
 
     @Override
-    public <T extends BasicexObject> T request(ApiResource.RequestMethod method, String path, Object params, Type typeToken, Boolean signRequest, RequestOptions options) throws BasicexException {
+    public <T> T request(ApiResource.RequestMethod method, String path, Object params, TypeReference<T> typeToken, Boolean signRequest, RequestOptions options) throws BasicexException {
 
         String fullUrl = String.format("%s%s", Optional.ofNullable(options).map(x -> Optional.ofNullable(x.getApiBaseUrl()).orElse(config.getApiBaseUrl())).orElse(config.getApiBaseUrl()), path);
         BasicexRequest request = new BasicexRequest(method, fullUrl, params, RequestOptions.merge(options, config));
@@ -58,16 +59,21 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
 
         T resource = null;
         try {
-            JsonObject jsonObject =
-                    ApiResource.GSON.fromJson(response.getBody(), JsonObject.class).getAsJsonObject("data");
-            if (jsonObject != null) {
-                resource = ApiResource.GSON.fromJson(jsonObject, typeToken);
+            if(typeToken.getType() instanceof ParameterizedType && ((ParameterizedType) typeToken.getType()).getRawType().getTypeName().equals("java.util.List")) {
+                JsonArray jsonArray = ApiResource.GSON.fromJson(response.getBody(), JsonObject.class).getAsJsonArray("data");
+                if(jsonArray != null) {
+                    resource = ApiResource.GSON.fromJson(jsonArray, typeToken.getType());
+                }
+            } else {
+                JsonObject jsonObject =
+                        ApiResource.GSON.fromJson(response.getBody(), JsonObject.class).getAsJsonObject("data");
+                if (jsonObject != null) {
+                    resource = ApiResource.GSON.fromJson(jsonObject, typeToken.getType());
+                }
             }
         } catch (JsonSyntaxException e) {
             raiseMalformedJsonError(responseBody, responseCode, requestId, e);
         }
-
-        resource.setLastResponse(response);
 
         return resource;
     }

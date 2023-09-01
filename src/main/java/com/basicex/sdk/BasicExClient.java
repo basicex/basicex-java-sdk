@@ -13,9 +13,7 @@ package com.basicex.sdk;
 import com.basicex.sdk.net.BasicexResponseGetter;
 import com.basicex.sdk.net.HttpClient;
 import com.basicex.sdk.net.SignatureResponseGetter;
-import com.basicex.sdk.service.InvoiceService;
-import com.basicex.sdk.service.PayoutService;
-import com.basicex.sdk.service.RefundService;
+import com.basicex.sdk.service.*;
 import com.basicex.sdk.util.PrivateKeyUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
 import lombok.Getter;
@@ -102,12 +100,20 @@ public class BasicExClient {
         return new InvoiceService(this.responseGetter);
     }
 
-    public PayoutService payout() {
+    public PayoutService payouts() {
         return new PayoutService(this.responseGetter);
     }
 
-    public RefundService refund() {
+    public RefundService refunds() {
         return new RefundService(this.responseGetter);
+    }
+
+    public WebhookService webhook() {
+        return new WebhookService(this.responseGetter);
+    }
+
+    public PlatformService platform() {
+        return new PlatformService(this.responseGetter);
     }
 
 }
