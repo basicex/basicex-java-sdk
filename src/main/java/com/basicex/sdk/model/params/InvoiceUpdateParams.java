@@ -36,18 +36,6 @@ public class InvoiceUpdateParams {
      */
     private ChainNetwork chain;
 
-    /**
-     * 金额字段
-     * 该字段根据`amountType`字段判断传入的是法币金额还是数字货币金额
-     */
-    private BigDecimal amount;
-
-    /**
-     * 金额类型字段，表示传入的`amount`是法币金额还是币种数量。
-     * `money_price` 法币金额
-     * `coin_amount` 币种数量
-     */
-    private AmountType amountType;
 
     /**
      * 商户侧的客户邮箱，如果传入，将在票据支付成功后向该邮箱发送邮件
@@ -67,12 +55,6 @@ public class InvoiceUpdateParams {
     private String redirectUrl;
 
     public void checkParams() {
-        if(amount != null) {
-            Preconditions.checkArgument(this.amountType != null, "amountType is required");
 
-            if(amountType.equals(AmountType.COIN_AMOUNT)) {
-                Preconditions.checkArgument(this.currency != null, "currency is required");
-            }
-        }
     }
 }

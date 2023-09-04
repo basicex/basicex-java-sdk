@@ -165,11 +165,6 @@ public class InvoiceService extends ApiService {
         params.checkParams();
 
         InvoiceUpdateRequest.InvoiceUpdateRequestBuilder builder = InvoiceUpdateRequest.builder();
-        if(params.getAmount() != null) {
-            builder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(params.getAmount().scale())).toBigInteger())
-                    .precision(params.getAmount().scale())
-                    .amountType(params.getAmountType().getCode());
-        }
 
         builder.chain(Optional.ofNullable(params.getChain()).map(ChainNetwork::getCode).orElse(null))
                 .ignoreParameterFailed(params.getIgnoreParameterFailed())

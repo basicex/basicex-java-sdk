@@ -11,6 +11,7 @@
 package com.basicex.sdk.service;
 
 import com.basicex.sdk.BasicExClient;
+import com.basicex.sdk.BasicExConfig;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.params.InvoiceCreateParams;
@@ -18,6 +19,9 @@ import com.basicex.sdk.model.params.constant.AmountType;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.Proxy;
 import java.security.cert.CertificateException;
 import java.util.UUID;
 

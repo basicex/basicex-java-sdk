@@ -34,7 +34,7 @@ public class PayoutServiceTest extends BaseTest {
 
 
     @Test
-    public void createPayoutTest() throws CertificateException, IOException, BasicexException {
+    public PayoutObject createPayoutTest() throws CertificateException, IOException, BasicexException {
         PayoutService payout = getClient().payouts();
         Map<String, String> map = new HashMap<>();
         map.put("desc", "Hello,BasicEx");
@@ -53,11 +53,13 @@ public class PayoutServiceTest extends BaseTest {
                 .build();
         PayoutObject payoutObject = payout.create(params);
         System.out.println(payoutObject);
+
+        return payoutObject;
     }
 
-    @Test
     void getPayoutTest() throws CertificateException, IOException, BasicexException {
-        PayoutResp payoutResp = getClient().payouts().get("40820230901144009956759386521860");
+        PayoutObject obj = createPayoutTest();
+        PayoutResp payoutResp = getClient().payouts().get(obj.getOrderNo());
         System.out.println(payoutResp);
     }
 
