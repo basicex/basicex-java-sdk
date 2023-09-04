@@ -20,13 +20,13 @@ public class BasicExClientTest {
 
     @Test
     void basicExClientConfigTest() throws CertificateException, IOException {
-        BasicExClient client = new BasicExClient("C:\\Users\\前端 1\\Downloads\\3e123583-6f14-4424-a42c-34e711ef7d03 (1)\\config.json");
+        BasicExClient client = new BasicExClient("D:\\f22c4d55-6670-4368-82fa-a8a55e664bfd\\config.json");
         Assertions.assertNotNull(client);
     }
 
     @Test
     void basicExClientPrivateKeyAndCertificateTest() throws CertificateException, IOException {
-        BasicExClient client = new BasicExClient("C:\\Users\\前端 1\\Downloads\\3e123583-6f14-4424-a42c-34e711ef7d03 (1)\\811324051595265.key", "C:\\Users\\前端 1\\Downloads\\3e123583-6f14-4424-a42c-34e711ef7d03 (1)\\811324051595265.crt");
+        BasicExClient client = new BasicExClient("D:\\f22c4d55-6670-4368-82fa-a8a55e664bfd\\888888888888888.key", "D:\\f22c4d55-6670-4368-82fa-a8a55e664bfd\\888888888888888.crt");
         Assertions.assertNotNull(client);
     }
 }
