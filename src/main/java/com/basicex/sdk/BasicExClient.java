@@ -15,6 +15,7 @@ import com.basicex.sdk.net.HttpClient;
 import com.basicex.sdk.net.SignatureResponseGetter;
 import com.basicex.sdk.service.*;
 import com.basicex.sdk.util.PrivateKeyUtils;
+import com.basicex.sdk.util.StringUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
 import lombok.Getter;
 
@@ -45,6 +46,11 @@ public class BasicExClient {
     public BasicExClient(String configFilePath) throws CertificateException, IOException {
         BasicExConfig config = BasicExConfig.loadConfig(configFilePath);
         this.responseGetter = new SignatureResponseGetter(config);
+    }
+
+    public BasicExClient(String configFilePath, BasicExConfig config) throws CertificateException, IOException {
+        BasicExConfig configBuilder = BasicExConfig.loadConfig(configFilePath);
+        this.responseGetter = new SignatureResponseGetter(BasicExConfig.merge(configBuilder, config));
     }
 
     /**

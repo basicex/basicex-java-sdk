@@ -35,6 +35,34 @@ implementation "com.basicex:basicex-java:1.0.2"
 
 ### 使用
 
+#### 配置SDK连接超时
+
+通过全局设置SDK连接和读取超时时间:
+```java
+BasicExClient client = new BasicExClient(configPath, BasicExConfig.builder()
+                .connectTimeout(30 * 1000)
+                .readTimeout(30 * 1000)
+                .build());
+```
+
+#### 配置SDK自动重试次数
+
+BasicEx Java SDK可以设置自动重试此数，当因为网络连接超时等原因情况下能够重新发起请求:
+```java
+BasicExClient client = new BasicExClient(configPath, BasicExConfig.builder()
+                .maxNetworkRetries(2)
+                .build());
+```
+
+#### 配置SDK代理
+
+BasicEx Java SDK可以设置代理，当你的服务器需要代理才能访问外网时:
+```java
+BasicExClient client = new BasicExClient(configPath, BasicExConfig.builder()
+                .proxy(new Proxy(Proxy.Type.HTTP, new InetSocketAddress("localhost", 1080)), new PasswordAuthentication("user", "password".toCharArray()))
+                .build());
+```
+
 #### 创建一个新票据
 
 ```java

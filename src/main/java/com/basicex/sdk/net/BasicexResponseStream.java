@@ -33,7 +33,7 @@ public class BasicexResponseStream extends AbstractBasicexResponse<InputStream> 
     /**
      * Buffers the entire response body into a string, constructing the appropriate BasicexResponse
      *
-     * @return the StripeResponse
+     * @return the BasicexResponse
      */
     BasicexResponse unstream() throws IOException {
         final String bodyString = StreamUtils.readToEnd(this.getBody(), StandardCharsets.UTF_8);
