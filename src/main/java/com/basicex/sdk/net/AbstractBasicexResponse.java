@@ -44,9 +44,9 @@ public abstract class AbstractBasicexResponse<T> {
     }
 
     /**
-     * Gets the date of the request, as returned by Stripe.
+     * Gets the date of the request, as returned by BasicEx.
      *
-     * @return the date of the request, as returned by Stripe
+     * @return the date of the request, as returned by BasicEx
      */
     public Instant getDate() {
         Optional<String> dateStr = this.headers.firstValue("Date");

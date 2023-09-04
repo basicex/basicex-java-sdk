@@ -86,8 +86,8 @@ public final class FormEncoder {
     /**
      * Returns a list of flattened parameters for the given map of parameters.
      *
-     * <p>This is a "pre-encoding" step necessary to send requests to Stripe's API. Form encoding can
-     * be ambiguous when it comes to nested parameters (lists or maps). Stripe's API relies heavily on
+     * <p>This is a "pre-encoding" step necessary to send requests to BasicEx's API. Form encoding can
+     * be ambiguous when it comes to nested parameters (lists or maps). BasicEx's API relies heavily on
      * such parameters and expects them to be encoded in a certain way. This method takes a map of
      * parameters that can contain deeply nested parameters and return a flat list of key/value pairs.
      *

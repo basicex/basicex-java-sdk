@@ -61,7 +61,7 @@ public class HttpURLConnectionClient extends HttpClient {
     }
 
     /**
-     * Sends the given request to Stripe's API, and returns a buffered response.
+     * Sends the given request to BasicEx's API, and returns a buffered response.
      *
      * @param request the request
      * @return the response
@@ -75,7 +75,7 @@ public class HttpURLConnectionClient extends HttpClient {
         } catch (IOException e) {
             throw new ApiConnectionException(
                     String.format(
-                            "IOException during API request to Stripe (%s): %s ",
+                            "IOException during API request to BasicEx (%s): %s ",
                             request.getOptions().getApiBaseUrl(), e.getMessage()),
                     e);
         }
