@@ -29,12 +29,24 @@ import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class InvoiceServiceTest extends BaseTest {
 
     @Test
-    InvoiceObject createEmptyInvoiceTest() throws CertificateException, IOException, BasicexException {
-        InvoiceObject invoice = getClient().invoices().create(InvoiceCreateParams.builder()
+    public void createEmptyInvoiceTest() throws BasicexException, CertificateException, IOException {
+        InvoiceObject obj = createEmptyInvoice();
+
+        System.out.println(obj.getInvoiceId());
+    }
+
+    @Test
+    public void concurrentTest() throws CertificateException, IOException, InterruptedException {
+        BasicExClient client1 = new BasicExClient("D:\\d57c7885-a1c5-449e-b8c5-9cb1eb1f4518\\config.json");
+        BasicExClient client2 = new BasicExClient("D:\\8f0867ba-085f-447c-882a-0684c4f6ded2\\config.json");
+
+        InvoiceCreateParams params1 = InvoiceCreateParams.builder()
                 .fiat("USD")
                 .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
                 .description("Test invoice:" + UUID.randomUUID().toString())
@@ -42,8 +54,61 @@ public class InvoiceServiceTest extends BaseTest {
                 .notificationUrl("https://baidu.com")
                 .redirectUrl("https://baidu.com")
                 .amountType(AmountType.MONEY_PRICE)
-                //.currency("BUSD")
-//                .forcedChain(ChainNetwork.BSC)
+                .amount(BigDecimal.valueOf(10.89))
+                .build();
+
+        InvoiceCreateParams params2 = InvoiceCreateParams.builder()
+                .fiat("USD")
+                .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
+                .description("Test invoice:" + UUID.randomUUID().toString())
+                .buyerIp("127.0.0.1")
+                .notificationUrl("https://baidu.com")
+                .redirectUrl("https://baidu.com")
+                .amountType(AmountType.MONEY_PRICE)
+                .amount(BigDecimal.valueOf(14.16))
+                .build();
+
+
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 2, 0L, java.util.concurrent.TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(2));
+        try {
+            executor.execute(() -> {
+                try {
+                    InvoiceObject invoice = client1.invoices().create(params1);
+                    Assertions.assertNotNull(invoice);
+                    Assertions.assertNotNull(invoice.getInvoiceId());
+                    System.out.println(invoice.getInvoiceId());
+                } catch (BasicexException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            executor.execute(() -> {
+                try {
+                    InvoiceObject invoice = client2.invoices().create(params2);
+                    Assertions.assertNotNull(invoice);
+                    Assertions.assertNotNull(invoice.getInvoiceId());
+                    System.out.println(invoice.getInvoiceId());
+                } catch (BasicexException e) {
+                    e.printStackTrace();
+                }
+            });
+        } finally {
+            Thread.sleep(5000L);
+            executor.shutdown();
+        }
+    }
+
+    public InvoiceObject createEmptyInvoice() throws CertificateException, IOException, BasicexException {
+        InvoiceObject invoice = getClient().invoices().create(InvoiceCreateParams.builder()
+                // .fiat("USD")
+                .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
+                .description("Test invoice:" + UUID.randomUUID().toString())
+                .buyerIp("127.0.0.1")
+                .notificationUrl("https://baidu.com")
+                .redirectUrl("https://baidu.com")
+                .amountType(AmountType.COIN_AMOUNT)
+                .currency("BUSD")
+                .forcedChain(ChainNetwork.TRC20)
                 .amount(BigDecimal.valueOf(12))
                 .build());
 
@@ -55,7 +120,7 @@ public class InvoiceServiceTest extends BaseTest {
 
     @Test
     void getInvoiceTest() throws CertificateException, IOException, BasicexException {
-        InvoiceObject o = createEmptyInvoiceTest();
+        InvoiceObject o = createEmptyInvoice();
         InvoiceObject invoice = getClient().invoices().get(o.getInvoiceId());
         Assertions.assertNotNull(invoice);
         Assertions.assertNotNull(invoice.getInvoiceId());
@@ -63,7 +128,7 @@ public class InvoiceServiceTest extends BaseTest {
 
     @Test
     void updateInvoiceFiatAmountTest() throws CertificateException, IOException, BasicexException {
-        InvoiceObject o = createEmptyInvoiceTest();
+        InvoiceObject o = createEmptyInvoice();
         InvoiceObject invoice = getClient().invoices().update(o.getInvoiceId(), InvoiceUpdateParams.builder()
                 .payerEmail("test@basicex.com").build());
 

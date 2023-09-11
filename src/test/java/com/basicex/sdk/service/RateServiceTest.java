@@ -8,24 +8,24 @@
  * THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package com.basicex.sdk;
+package com.basicex.sdk.service;
+
+import com.basicex.sdk.BaseTest;
+import com.basicex.sdk.exception.BasicexException;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.security.cert.CertificateException;
+import java.util.Map;
 
-public abstract class BaseTest {
-    // public String configPath = "D:\\70f1ad61-cb4b-4970-bf34-b0a79bfa6e92\\config.json";
-    // public String configPath = "D:\\dowloads\\003ec33e-8f0a-43f8-90f2-9577396dc2ac\\config.json";
+public class RateServiceTest extends BaseTest {
 
-    //public String configPath = "D:\\dowloads\\1fbfcf88-7044-4fc6-a695-04388e3d13ea\\config.json";
+    @Test
+    public void getRateTest() throws CertificateException, IOException, BasicexException {
+        Map<String, BigDecimal> rates = getClient().rates().getRates("USD");
 
-    // public String configPath = "D:\\f22c4d55-6670-4368-82fa-a8a55e664bfd\\config.json";
-    // public String configPath = "D:\\8f0867ba-085f-447c-882a-0684c4f6ded2\\config.json";
-    // public String configPath = "D:\\d57c7885-a1c5-449e-b8c5-9cb1eb1f4518\\config.json";
-
-    public String configPath = "D:\\production_test\\config.json";
-    // public String configPath = "D:\\dowloads\\zhimaDADA\\f22c4d55-6670-4368-82fa-a8a55e664bfd\\config.json";
-    public BasicExClient getClient() throws CertificateException, IOException {
-        return new BasicExClient(configPath);
+        Assertions.assertNotNull(rates);
     }
 }

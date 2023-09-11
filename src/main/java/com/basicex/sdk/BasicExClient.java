@@ -121,16 +121,16 @@ public class BasicExClient {
         return new PayoutService(this.responseGetter);
     }
 
-    public RefundService refunds() {
-        return new RefundService(this.responseGetter);
-    }
-
     public WebhookService webhook() {
         return new WebhookService(this.responseGetter);
     }
 
     public PlatformService platform() {
         return new PlatformService(this.responseGetter);
+    }
+
+    public RateService rates() {
+        return new RateService(this.responseGetter);
     }
 
 }
