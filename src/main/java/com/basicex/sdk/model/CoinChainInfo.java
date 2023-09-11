@@ -10,9 +10,12 @@
 
 package com.basicex.sdk.model;
 
+import lombok.Data;
+
 /**
  * 支付票据的币种链信息
  */
+@Data
 public class CoinChainInfo {
     /**
      * 链网络名称

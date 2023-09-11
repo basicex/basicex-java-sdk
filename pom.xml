@@ -26,7 +26,7 @@
     <licenses>
         <license>
             <name>MIT License</name>
-            <url>https://github.com/bitpay/java-bitpay-client/blob/master/LICENSE</url>
+            <url>https://github.com/basicex/basicex-java-sdk/blob/master/LICENSE</url>
             <distribution>github</distribution>
         </license>
     </licenses>
