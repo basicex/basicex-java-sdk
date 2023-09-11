@@ -21,9 +21,9 @@ public abstract class BaseTest {
 
     // public String configPath = "D:\\f22c4d55-6670-4368-82fa-a8a55e664bfd\\config.json";
     // public String configPath = "D:\\8f0867ba-085f-447c-882a-0684c4f6ded2\\config.json";
-    // public String configPath = "D:\\d57c7885-a1c5-449e-b8c5-9cb1eb1f4518\\config.json";
+     public String configPath = "D:\\6050cccd-1a2b-4419-a2e8-aac885f07e14\\config.json";
 
-    public String configPath = "D:\\production_test\\config.json";
+    //public String configPath = "D:\\production_test\\config.json";
     // public String configPath = "D:\\dowloads\\zhimaDADA\\f22c4d55-6670-4368-82fa-a8a55e664bfd\\config.json";
     public BasicExClient getClient() throws CertificateException, IOException {
         return new BasicExClient(configPath);
