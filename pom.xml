@@ -26,7 +26,7 @@
     <licenses>
         <license>
             <name>MIT License</name>
-            <url>https://github.com/bitpay/java-bitpay-client/blob/master/LICENSE</url>
+            <url>https://github.com/basicex/basicex-java-sdk/blob/master/LICENSE</url>
             <distribution>github</distribution>
         </license>
     </licenses>
@@ -42,10 +42,22 @@
         <url>https://basicex.com</url>
     </organization>
 
+    <developers>
+        <developer>
+            <name>BasicEx</name>
+            <email>service@basicex.com</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
     </properties>
 
     <distributionManagement>
@@ -120,6 +132,9 @@
                 <configuration>
                     <source>8</source>
                     <additionalOptions>-notimestamp</additionalOptions>
+                    <charset>UTF-8</charset>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
                 </configuration>
                 <executions>
                     <execution>
@@ -150,6 +165,7 @@
                 <version>2.22.2</version>
                 <configuration>
                     <argLine>@{argLine} -Duser.timezone=UTC</argLine>
+                    <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
                     <excludes>
                         <exclude>**/WebhookServiceTest.java</exclude>
                     </excludes>

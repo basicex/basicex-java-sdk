@@ -14,7 +14,9 @@ package com.basicex.sdk.service;
 import com.basicex.sdk.BaseTest;
 import com.basicex.sdk.BasicExClient;
 import com.basicex.sdk.BasicExConfig;
+import com.basicex.sdk.exception.ApiException;
 import com.basicex.sdk.exception.BasicexException;
+import com.basicex.sdk.exception.InvalidRequestException;
 import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.params.InvoiceCreateParams;
 import com.basicex.sdk.model.params.InvoiceUpdateParams;
@@ -29,12 +31,24 @@ import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class InvoiceServiceTest extends BaseTest {
 
     @Test
-    void createEmptyInvoiceTest() throws CertificateException, IOException, BasicexException {
-        InvoiceObject invoice = getClient().invoices().create(InvoiceCreateParams.builder()
+    public void createEmptyInvoiceTest() throws BasicexException, CertificateException, IOException {
+        InvoiceObject obj = createFiatCurrencyInvoice();
+
+        System.out.println(obj.getInvoiceId());
+    }
+
+    @Test
+    public void concurrentTest() throws CertificateException, IOException, InterruptedException {
+        BasicExClient client1 = new BasicExClient("D:\\d57c7885-a1c5-449e-b8c5-9cb1eb1f4518\\config.json");
+        BasicExClient client2 = new BasicExClient("D:\\8f0867ba-085f-447c-882a-0684c4f6ded2\\config.json");
+
+        InvoiceCreateParams params1 = InvoiceCreateParams.builder()
                 .fiat("USD")
                 .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
                 .description("Test invoice:" + UUID.randomUUID().toString())
@@ -42,41 +56,144 @@ public class InvoiceServiceTest extends BaseTest {
                 .notificationUrl("https://baidu.com")
                 .redirectUrl("https://baidu.com")
                 .amountType(AmountType.MONEY_PRICE)
-                //.currency("BUSD")
-//                .forcedChain(ChainNetwork.BSC)
+                .amount(BigDecimal.valueOf(10.89))
+                .build();
+
+        InvoiceCreateParams params2 = InvoiceCreateParams.builder()
+                .fiat("USD")
+                .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
+                .description("Test invoice:" + UUID.randomUUID().toString())
+                .buyerIp("127.0.0.1")
+                .notificationUrl("https://baidu.com")
+                .redirectUrl("https://baidu.com")
+                .amountType(AmountType.MONEY_PRICE)
+                .amount(BigDecimal.valueOf(14.16))
+                .build();
+
+
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 2, 0L, java.util.concurrent.TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(2));
+        try {
+            executor.execute(() -> {
+                try {
+                    InvoiceObject invoice = client1.invoices().create(params1);
+                    Assertions.assertNotNull(invoice);
+                    Assertions.assertNotNull(invoice.getInvoiceId());
+                    System.out.println(invoice.getInvoiceId());
+                } catch (BasicexException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            executor.execute(() -> {
+                try {
+                    InvoiceObject invoice = client2.invoices().create(params2);
+                    Assertions.assertNotNull(invoice);
+                    Assertions.assertNotNull(invoice.getInvoiceId());
+                    System.out.println(invoice.getInvoiceId());
+                } catch (BasicexException e) {
+                    e.printStackTrace();
+                }
+            });
+        } finally {
+            Thread.sleep(5000L);
+            executor.shutdown();
+        }
+    }
+
+    public InvoiceObject createFiatCurrencyInvoice() throws CertificateException, IOException, BasicexException {
+        InvoiceObject invoice = getClient().invoices().create(InvoiceCreateParams.builder()
+                .fiat("USD")
+                .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
+                .description("Test invoice:" + UUID.randomUUID().toString())
+                .buyerIp("127.0.0.1")
+                .notificationUrl("https://basicex.com")
+                .redirectUrl("https://basicex.com")
+                .amountType(AmountType.MONEY_PRICE)
                 .amount(BigDecimal.valueOf(12))
                 .build());
 
         Assertions.assertNotNull(invoice);
         Assertions.assertNotNull(invoice.getInvoiceId());
 
-        System.out.println(invoice.getInvoiceId());
+        return invoice;
+    }
+
+    private InvoiceObject createFixedCurrencyInvoice() throws CertificateException, IOException, BasicexException {
+        InvoiceObject invoice = getClient().invoices().create(InvoiceCreateParams.builder()
+                // .fiat("USD")
+                .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
+                .description("Test invoice:" + UUID.randomUUID().toString())
+                .buyerIp("127.0.0.1")
+                .notificationUrl("https://basicex.com")
+                .redirectUrl("https://basicex.com")
+                .amountType(AmountType.COIN_AMOUNT)
+                .currency("USDT")
+                .amount(BigDecimal.valueOf(12))
+                .build());
+
+        Assertions.assertNotNull(invoice);
+        Assertions.assertNotNull(invoice.getInvoiceId());
+
+        return invoice;
     }
 
     @Test
     void getInvoiceTest() throws CertificateException, IOException, BasicexException {
-        InvoiceObject invoice = getClient().invoices().get("40620230831171234553743040512291");
+        InvoiceObject o = createFiatCurrencyInvoice();
+        InvoiceObject invoice = getClient().invoices().get(o.getInvoiceId());
         Assertions.assertNotNull(invoice);
         Assertions.assertNotNull(invoice.getInvoiceId());
     }
 
     @Test
-    void updateInvoiceFiatAmountTest() throws CertificateException, IOException, BasicexException {
-        InvoiceObject invoice = getClient().invoices().update("40620230822134552202883210445009", InvoiceUpdateParams.builder()
-                .amount(BigDecimal.valueOf(10.23))
-                .amountType(AmountType.MONEY_PRICE).build());
+    void updateTest() throws CertificateException, IOException, BasicexException {
+        InvoiceObject o = createFixedCurrencyInvoice();
+        InvoiceObject invoice = getClient().invoices().update(o.getInvoiceId(), InvoiceUpdateParams.builder()
+                .payerEmail("test@basicex.com").build());
 
         Assertions.assertNotNull(invoice);
-    }
+        Assertions.assertEquals(invoice.getPayerEmail(), "test@basicex.com");
 
-    @Test
-    void updateInvoiceCurrencyTest() throws CertificateException, IOException, BasicexException {
-        InvoiceObject invoice = getClient().invoices().update("40620230822134552202883210445009", InvoiceUpdateParams.builder()
-                .chain(ChainNetwork.TRC20).build());
+        invoice = getClient().invoices().update(o.getInvoiceId(), InvoiceUpdateParams.builder()
+                .payerEmail("test1@basicex.com")
+                .build());
+        Assertions.assertNotNull(invoice);
+        Assertions.assertEquals(invoice.getPayerEmail(), "test1@basicex.com");
+
+        InvoiceObject finalO = o;
+        Assertions.assertThrows(InvalidRequestException.class, () -> {
+            getClient().invoices().update(finalO.getInvoiceId(), InvoiceUpdateParams.builder()
+                    .currency("USDT")
+                    .build());
+        });
+
+        o = createFiatCurrencyInvoice();
+        invoice = getClient().invoices().update(o.getInvoiceId(), InvoiceUpdateParams.builder()
+                .currency("USDT")
+                .chain(ChainNetwork.TRC20)
+                .build());
+        Assertions.assertNotNull(invoice);
+        Assertions.assertTrue(invoice.getPaymentInfo().getAllowChainPayment());
+        Assertions.assertEquals(invoice.getPaymentInfo().getNetwork().getNetwork(), ChainNetwork.TRC20.getCode());
+        Assertions.assertEquals(invoice.getCurrency(), "USDT");
+
+        Assertions.assertNotNull(invoice.getPaymentInfo().getPayeeAddress());
+        Assertions.assertTrue(invoice.getPaymentInfo().getPayeeAddress().startsWith("T"));
+
+        invoice = getClient().invoices().update(o.getInvoiceId(), InvoiceUpdateParams.builder()
+                .currency("USDT")
+                .chain(ChainNetwork.ERC20)
+                .build());
 
         Assertions.assertNotNull(invoice);
-        Assertions.assertNotNull(invoice.getInvoiceId());
+        Assertions.assertTrue(invoice.getPaymentInfo().getAllowChainPayment());
+        Assertions.assertEquals(invoice.getPaymentInfo().getNetwork().getNetwork(), ChainNetwork.ERC20.getCode());
+        Assertions.assertEquals(invoice.getCurrency(), "USDT");
+
+        Assertions.assertNotNull(invoice.getPaymentInfo().getPayeeAddress());
+        Assertions.assertTrue(invoice.getPaymentInfo().getPayeeAddress().startsWith("0x"));
     }
+
 
     @Test
     void invoiceTest1() throws CertificateException, IOException, BasicexException {
@@ -86,11 +203,11 @@ public class InvoiceServiceTest extends BaseTest {
         InvoiceObject invoice = getClient().invoices().create(InvoiceCreateParams.builder()
                 .amount(BigDecimal.TEN)
                 .amountType(AmountType.COIN_AMOUNT)
-                .description("Test:" + UUID.randomUUID().toString())
+                .description("Test:" + UUID.randomUUID().toString().replaceAll("-", ""))
                 .fiat("USD")
                 .currency("USDT")
                 .forcedChain(ChainNetwork.TRC20)
-                .orderId(UUID.randomUUID().toString())
+                .orderId(UUID.randomUUID().toString().replaceAll("-", ""))
                 .payerEmail("test@test.com")
                 .metadata(metadata)
                 .notificationUrl("https://google.com")
@@ -107,10 +224,6 @@ public class InvoiceServiceTest extends BaseTest {
         Assertions.assertEquals(invoice.getPaymentInfo().getTotalAmount().compareTo(BigDecimal.TEN), 0);
 
         Assertions.assertThrows(BasicexException.class, () -> {
-            getClient().invoices().update(invoice.getInvoiceId(), InvoiceUpdateParams.builder()
-                    .amount(BigDecimal.valueOf(10.23))
-                    .amountType(AmountType.MONEY_PRICE).build());
-
             getClient().invoices().update(invoice.getInvoiceId(), InvoiceUpdateParams.builder()
                     .currency("BCNY")
                     .build());

@@ -10,6 +10,7 @@
 
 package com.basicex.sdk;
 
+import com.basicex.sdk.net.RequestOptions;
 import com.basicex.sdk.util.StringUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
 import lombok.Data;
@@ -50,12 +51,55 @@ public class BasicExConfig {
 
     private BasicExConfig() {}
 
+    public BasicExConfig(PrivateKey privateKey, X509Certificate certificate, String certificateSerialNumber, String merchantCode, int connectTimeout, int readTimeout, int maxNetworkRetries, Proxy connectionProxy, PasswordAuthentication proxyCredential, String apiBaseUrl) {
+        this.privateKey = privateKey;
+        this.certificate = certificate;
+        this.certificateSerialNumber = certificateSerialNumber;
+        this.merchantCode = merchantCode;
+        this.connectTimeout = connectTimeout;
+        this.readTimeout = readTimeout;
+        this.maxNetworkRetries = maxNetworkRetries;
+        this.connectionProxy = connectionProxy;
+        this.proxyCredential = proxyCredential;
+        this.apiBaseUrl = apiBaseUrl;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
 
     public static BasicExConfig loadConfig(String configFilePath) throws IOException, CertificateException {
         return ConfigFileLoader.load(configFilePath);
+    }
+
+    public static BasicExConfig merge(BasicExConfig old, BasicExConfig config) {
+        if(old == null) {
+            return new BasicExConfig(
+                    config.getPrivateKey(),
+                    config.getCertificate(),
+                    config.getCertificateSerialNumber(),
+                    config.getMerchantCode(),
+                    config.getConnectTimeout(),
+                    config.getReadTimeout(),
+                    config.getMaxNetworkRetries(),
+                    config.getConnectionProxy(),
+                    config.getProxyCredential(),
+                    config.getApiBaseUrl()
+            );
+        }
+
+        return new BasicExConfig(
+                config.getPrivateKey() != null ? config.getPrivateKey() : old.getPrivateKey(),
+                config.getCertificate() != null ? config.getCertificate() : old.getCertificate(),
+                old.getCertificateSerialNumber(),
+                old.getMerchantCode(),
+                config.getConnectTimeout() != 0 ? config.getConnectTimeout() : old.getConnectTimeout(),
+                config.getReadTimeout() != 0 ? config.getReadTimeout() : old.getReadTimeout(),
+                config.getMaxNetworkRetries() != 0 ? config.getMaxNetworkRetries() : old.getMaxNetworkRetries(),
+                config.getConnectionProxy() != null ? config.getConnectionProxy() : old.getConnectionProxy(),
+                config.getProxyCredential() != null ? config.getProxyCredential() : old.getProxyCredential(),
+                config.getApiBaseUrl() != null ? config.getApiBaseUrl() : old.getApiBaseUrl()
+        );
     }
 
     public static class Builder {

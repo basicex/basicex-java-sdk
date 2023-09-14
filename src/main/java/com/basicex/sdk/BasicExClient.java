@@ -15,9 +15,11 @@ import com.basicex.sdk.net.HttpClient;
 import com.basicex.sdk.net.SignatureResponseGetter;
 import com.basicex.sdk.service.*;
 import com.basicex.sdk.util.PrivateKeyUtils;
+import com.basicex.sdk.util.StringUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
 import lombok.Getter;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -41,10 +43,24 @@ public class BasicExClient {
      * Create a new BasicEx client instance.
      *
      * @param configFilePath The config file path
+     * @throws CertificateException The Certificate Exception
+     * @throws IOException The IOException
      */
     public BasicExClient(String configFilePath) throws CertificateException, IOException {
         BasicExConfig config = BasicExConfig.loadConfig(configFilePath);
         this.responseGetter = new SignatureResponseGetter(config);
+    }
+
+    /**
+     * Create a new BasicEx client instance.
+     * @param configFilePath The config file path
+     * @param config The BasicExConfig instance
+     * @throws CertificateException
+     * @throws IOException
+     */
+    public BasicExClient(String configFilePath, BasicExConfig config) throws CertificateException, IOException {
+        BasicExConfig configBuilder = BasicExConfig.loadConfig(configFilePath);
+        this.responseGetter = new SignatureResponseGetter(BasicExConfig.merge(configBuilder, config));
     }
 
     /**
@@ -54,8 +70,8 @@ public class BasicExClient {
      * @param certificateFilePath The  certificate file path based on the X.509 certificate format
      */
     public BasicExClient(String privateKeyFilePath, String certificateFilePath) throws IOException, CertificateException {
-        byte[] privateKeyBytes = Files.readAllBytes(Paths.get(URI.create(privateKeyFilePath)));
-        byte[] certificateBytes = Files.readAllBytes(Paths.get(URI.create(certificateFilePath)));
+        byte[] privateKeyBytes = Files.readAllBytes(Paths.get(new File(privateKeyFilePath).toURI()));
+        byte[] certificateBytes = Files.readAllBytes(Paths.get(new File(certificateFilePath).toURI()));
 
         PrivateKey privateKey = PrivateKeyUtils.loadPrivateKey(new String(privateKeyBytes));
         List<X509Certificate> certificateList = X509CertificateUtils.toX509CertificateList(new String(certificateBytes));
@@ -91,6 +107,7 @@ public class BasicExClient {
      * Create a new BasicEx client instance.
      *
      * @param config The BasicExConfig instance
+     * @param client The HttpClient instance
      */
     public BasicExClient(BasicExConfig config, HttpClient client) {
         this.responseGetter = new SignatureResponseGetter(client, config);
@@ -104,16 +121,16 @@ public class BasicExClient {
         return new PayoutService(this.responseGetter);
     }
 
-    public RefundService refunds() {
-        return new RefundService(this.responseGetter);
-    }
-
     public WebhookService webhook() {
         return new WebhookService(this.responseGetter);
     }
 
     public PlatformService platform() {
         return new PlatformService(this.responseGetter);
+    }
+
+    public RateService rates() {
+        return new RateService(this.responseGetter);
     }
 
 }
