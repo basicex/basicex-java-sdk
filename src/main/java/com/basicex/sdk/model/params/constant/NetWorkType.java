@@ -31,17 +31,17 @@ public enum NetWorkType {
      */
     ERC20("ERC20", "ERC20"),
     /**
-     * BSC
+     * BEP20
      */
-    BSC("BSC", "BSC"),
+    BEP20("BEP20", "BEP20"),
     /**
      * TRC20
      */
     TRC20("TRC20", "TRC20"),
     /**
-     * POLYGON
+     * MATIC
      */
-    POLYGON("Polygon", "POLYGON");
+    MATIC("MATIC", "MATIC");
 
     /**
      * type
