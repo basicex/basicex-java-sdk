@@ -1,5 +1,6 @@
 # BasicEx Java SDK
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Maven Central](https://img.shields.io/badge/maven--central-v1.0.3-blue)](https://central.sonatype.com/artifact/com.basicex/basicex-java/1.0.3)
 
 [English](./README-en.md) | [简体中文](./README.md)
 
@@ -16,7 +17,7 @@ Full implementation of the BasicEx Payment Gateway. This library implements Basi
 Add this dependency to your project's build file:
 
 ```groovy
-implementation "com.basicex:basicex-java:1.0.2"
+implementation "com.basicex:basicex-java:1.0.3"
 ```
 
 ### Maven users
@@ -27,7 +28,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.basicex</groupId>
   <artifactId>basicex-java</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
