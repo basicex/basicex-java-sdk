@@ -10,9 +10,12 @@
 
 package com.basicex.sdk.model;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.util.Map;
 
+@Data
 public class PayoutResp extends BasicexObject {
     /**
      * 商户订单号
