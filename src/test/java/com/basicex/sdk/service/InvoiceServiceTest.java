@@ -13,8 +13,6 @@ package com.basicex.sdk.service;
 
 import com.basicex.sdk.BaseTest;
 import com.basicex.sdk.BasicExClient;
-import com.basicex.sdk.BasicExConfig;
-import com.basicex.sdk.exception.ApiException;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.exception.InvalidRequestException;
 import com.basicex.sdk.model.InvoiceObject;
@@ -109,7 +107,7 @@ public class InvoiceServiceTest extends BaseTest {
                 .notificationUrl("https://basicex.com")
                 .redirectUrl("https://basicex.com")
                 .amountType(AmountType.MONEY_PRICE)
-                .amount(BigDecimal.valueOf(12))
+                .amount(BigDecimal.valueOf(10.25))
                 .build());
 
         Assertions.assertNotNull(invoice);
@@ -128,7 +126,7 @@ public class InvoiceServiceTest extends BaseTest {
                 .redirectUrl("https://basicex.com")
                 .amountType(AmountType.COIN_AMOUNT)
                 .currency("USDT")
-                .amount(BigDecimal.valueOf(12))
+                .amount(BigDecimal.valueOf(1))
                 .build());
 
         Assertions.assertNotNull(invoice);

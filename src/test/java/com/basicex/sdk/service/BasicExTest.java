@@ -11,25 +11,27 @@
 package com.basicex.sdk.service;
 
 import com.basicex.sdk.BasicExClient;
-import com.basicex.sdk.BasicExConfig;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.InvoiceObject;
-import com.basicex.sdk.model.params.InvoiceCreateParams;
-import com.basicex.sdk.model.params.constant.AmountType;
+import com.basicex.sdk.model.params.InvoiceUpdateParams;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.net.InetSocketAddress;
-import java.net.PasswordAuthentication;
-import java.net.Proxy;
 import java.security.cert.CertificateException;
-import java.util.UUID;
 
 public class BasicExTest{
     private static String configPath = "~/4d1ebd88-8154-4ca1-b1c6-051b7d28c204/config.json";
     public static void main(String[] args) throws CertificateException, IOException, BasicexException {
         BasicExClient client = new BasicExClient(configPath);
-        InvoiceObject invoiceObject = client.invoices().create(InvoiceCreateParams.builder()
+
+        InvoiceObject invoiceObject = client.invoices().update("5f9b1b4b-3b7c-4b7a-8b1a-3b5b4b7a8b1a",
+                InvoiceUpdateParams.builder()
+                        .payerEmail("test001@basicex.com").build());
+
+        System.out.println(invoiceObject.getInvoiceId());
+
+        /*InvoiceObject invoiceObject = client.invoices().get("5f9b1b4b-3b7c-4b7a-8b1a-3b5b4b7a8b1a");
+        System.out.println(invoiceObject.getInvoiceId());*/
+        /*InvoiceObject invoiceObject = client.invoices().create(InvoiceCreateParams.builder()
                 .redirectUrl("https://basicex.com")
                 .notificationUrl("https://basicex.com/notify")
                 .fiat("USD")
@@ -40,6 +42,6 @@ public class BasicExTest{
                 .build());
 
         String cashierUrl = invoiceObject.getCashierUrl();
-        System.out.println(cashierUrl);
+        System.out.println(cashierUrl);*/
     }
 }
