@@ -17,7 +17,7 @@
 添加这个依赖到你的项目的构建文件:
 
 ```groovy
-implementation "com.basicex:basicex-java:1.0.3"
+implementation "com.basicex:basicex-java:1.0.4"
 ```
 
 ### Maven使用
@@ -28,7 +28,7 @@ implementation "com.basicex:basicex-java:1.0.3"
 <dependency>
     <groupId>com.basicex</groupId>
     <artifactId>basicex-java</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
 
