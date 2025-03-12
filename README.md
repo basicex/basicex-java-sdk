@@ -1,6 +1,6 @@
 # BasicEx Java SDK
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Maven Central](https://img.shields.io/badge/maven--central-v1.0.2-blue)](https://central.sonatype.com/artifact/com.basicex/basicex-java/1.0.2)
+[![Maven Central](https://img.shields.io/badge/maven--central-v1.0.3-blue)](https://central.sonatype.com/artifact/com.basicex/basicex-java/1.0.3)
 
 [English](./README-en.md) | [简体中文](./README.md)
 
@@ -17,7 +17,7 @@
 添加这个依赖到你的项目的构建文件:
 
 ```groovy
-implementation "com.basicex:basicex-java:1.0.2"
+implementation "com.basicex:basicex-java:1.0.3"
 ```
 
 ### Maven使用
@@ -28,7 +28,7 @@ implementation "com.basicex:basicex-java:1.0.2"
 <dependency>
     <groupId>com.basicex</groupId>
     <artifactId>basicex-java</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 

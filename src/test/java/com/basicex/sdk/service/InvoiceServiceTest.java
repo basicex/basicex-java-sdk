@@ -13,8 +13,6 @@ package com.basicex.sdk.service;
 
 import com.basicex.sdk.BaseTest;
 import com.basicex.sdk.BasicExClient;
-import com.basicex.sdk.BasicExConfig;
-import com.basicex.sdk.exception.ApiException;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.exception.InvalidRequestException;
 import com.basicex.sdk.model.InvoiceObject;
@@ -35,7 +33,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 
 public class InvoiceServiceTest extends BaseTest {
-
     @Test
     public void createEmptyInvoiceTest() throws BasicexException, CertificateException, IOException {
         InvoiceObject obj = createFiatCurrencyInvoice();
@@ -44,6 +41,10 @@ public class InvoiceServiceTest extends BaseTest {
     }
 
     @Test
+    public void updateInvoiceTest() throws CertificateException, IOException, BasicexException {
+        getClient().invoices().update("40620230918161349373246929715463", InvoiceUpdateParams.builder().currency("USDT").build());
+    }
+
     public void concurrentTest() throws CertificateException, IOException, InterruptedException {
         BasicExClient client1 = new BasicExClient("D:\\d57c7885-a1c5-449e-b8c5-9cb1eb1f4518\\config.json");
         BasicExClient client2 = new BasicExClient("D:\\8f0867ba-085f-447c-882a-0684c4f6ded2\\config.json");
@@ -56,7 +57,7 @@ public class InvoiceServiceTest extends BaseTest {
                 .notificationUrl("https://baidu.com")
                 .redirectUrl("https://baidu.com")
                 .amountType(AmountType.MONEY_PRICE)
-                .amount(BigDecimal.valueOf(10.89))
+                .amount(BigDecimal.valueOf(1))
                 .build();
 
         InvoiceCreateParams params2 = InvoiceCreateParams.builder()
@@ -67,7 +68,7 @@ public class InvoiceServiceTest extends BaseTest {
                 .notificationUrl("https://baidu.com")
                 .redirectUrl("https://baidu.com")
                 .amountType(AmountType.MONEY_PRICE)
-                .amount(BigDecimal.valueOf(14.16))
+                .amount(BigDecimal.valueOf(12.58))
                 .build();
 
 
@@ -128,7 +129,7 @@ public class InvoiceServiceTest extends BaseTest {
                 .redirectUrl("https://basicex.com")
                 .amountType(AmountType.COIN_AMOUNT)
                 .currency("USDT")
-                .amount(BigDecimal.valueOf(12))
+                .amount(BigDecimal.valueOf(1))
                 .build());
 
         Assertions.assertNotNull(invoice);

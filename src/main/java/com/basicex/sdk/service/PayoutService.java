@@ -53,7 +53,10 @@ public class PayoutService extends ApiService {
         params.checkParams();
         //构建请求参数
         PayoutCreateRequest.PayoutCreateRequestBuilder payoutRequestBuilder = PayoutCreateRequest.builder();
-        if (params.getAmount() != null) {
+        if(params.getAmount().scale() == 0) {
+            payoutRequestBuilder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(2)).toBigInteger())
+                    .precision(2);
+        } else {
             payoutRequestBuilder.amount(params.getAmount().multiply(BigDecimal.TEN.pow(params.getAmount().scale())).toBigInteger())
                     .precision(params.getAmount().scale());
         }
