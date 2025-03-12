@@ -17,7 +17,7 @@ Full implementation of the BasicEx Payment Gateway. This library implements Basi
 Add this dependency to your project's build file:
 
 ```groovy
-implementation "com.basicex:basicex-java:1.0.3"
+implementation "com.basicex:basicex-java:1.0.4"
 ```
 
 ### Maven users
