@@ -13,14 +13,9 @@ package com.basicex.sdk.service;
 
 import com.basicex.sdk.BaseTest;
 import com.basicex.sdk.exception.BasicexException;
-import com.basicex.sdk.model.InvoiceObject;
 import com.basicex.sdk.model.PayoutObject;
-import com.basicex.sdk.model.PayoutResp;
-import com.basicex.sdk.model.params.InvoiceCreateParams;
 import com.basicex.sdk.model.params.PayoutCreateParams;
-import com.basicex.sdk.model.params.constant.AmountType;
 import com.basicex.sdk.model.params.constant.NetWorkType;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -32,9 +27,8 @@ import java.util.UUID;
 
 public class PayoutServiceTest extends BaseTest {
 
-
     @Test
-    public PayoutObject createPayoutTest() throws CertificateException, IOException, BasicexException {
+    void createPayoutTest() throws CertificateException, IOException, BasicexException {
         PayoutService payout = getClient().payouts();
         Map<String, String> map = new HashMap<>();
         map.put("desc", "Hello,BasicEx");
@@ -53,14 +47,5 @@ public class PayoutServiceTest extends BaseTest {
                 .build();
         PayoutObject payoutObject = payout.create(params);
         System.out.println(payoutObject);
-
-        return payoutObject;
     }
-
-    void getPayoutTest() throws CertificateException, IOException, BasicexException {
-        PayoutObject obj = createPayoutTest();
-        PayoutResp payoutResp = getClient().payouts().get(obj.getOrderNo());
-        System.out.println(payoutResp);
-    }
-
 }
