@@ -10,7 +10,6 @@
 
 package com.basicex.sdk;
 
-import com.basicex.sdk.net.RequestOptions;
 import com.basicex.sdk.util.StringUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
 import lombok.Data;
@@ -35,6 +34,8 @@ public class BasicExConfig {
     private volatile X509Certificate certificate;
     private volatile String certificateSerialNumber;
     private volatile String merchantCode;
+    private volatile String apiKey;
+    private volatile String secretKey;
 
     // Note that URLConnection reserves the value of 0 to mean "infinite
     // timeout", so we use -1 here to represent an unset value which should
@@ -62,6 +63,28 @@ public class BasicExConfig {
         this.connectionProxy = connectionProxy;
         this.proxyCredential = proxyCredential;
         this.apiBaseUrl = apiBaseUrl;
+        validateAuth();
+    }
+
+    public BasicExConfig(String apiKey, String secretKey, int connectTimeout, int readTimeout, int maxNetworkRetries, Proxy connectionProxy, PasswordAuthentication proxyCredential, String apiBaseUrl) {
+        this.apiKey = apiKey;
+        this.secretKey = secretKey;
+        this.connectTimeout = connectTimeout;
+        this.readTimeout = readTimeout;
+        this.maxNetworkRetries = maxNetworkRetries;
+        this.connectionProxy = connectionProxy;
+        this.proxyCredential = proxyCredential;
+        this.apiBaseUrl = apiBaseUrl;
+        validateAuth();
+    }
+
+    private void validateAuth() {
+        boolean hasKeyAuth = StringUtils.isNotBlank(this.apiKey) || StringUtils.isNotBlank(this.secretKey);
+        boolean hasCertAuth = this.certificate != null || this.privateKey != null;
+
+        if (hasKeyAuth && hasCertAuth) {
+            throw new IllegalArgumentException("Cannot configure both API Key and Certificate at the same time. Please choose one.");
+        }
     }
 
     public static Builder builder() {
@@ -73,33 +96,37 @@ public class BasicExConfig {
     }
 
     public static BasicExConfig merge(BasicExConfig old, BasicExConfig config) {
+        BasicExConfig merged = new BasicExConfig();
         if(old == null) {
-            return new BasicExConfig(
-                    config.getPrivateKey(),
-                    config.getCertificate(),
-                    config.getCertificateSerialNumber(),
-                    config.getMerchantCode(),
-                    config.getConnectTimeout(),
-                    config.getReadTimeout(),
-                    config.getMaxNetworkRetries(),
-                    config.getConnectionProxy(),
-                    config.getProxyCredential(),
-                    config.getApiBaseUrl()
-            );
+            merged.privateKey = config.getPrivateKey();
+            merged.certificate = config.getCertificate();
+            merged.certificateSerialNumber = config.getCertificateSerialNumber();
+            merged.merchantCode = config.getMerchantCode();
+            merged.apiKey = config.getApiKey();
+            merged.secretKey = config.getSecretKey();
+            merged.connectTimeout = config.getConnectTimeout();
+            merged.readTimeout = config.getReadTimeout();
+            merged.maxNetworkRetries = config.getMaxNetworkRetries();
+            merged.connectionProxy = config.getConnectionProxy();
+            merged.proxyCredential = config.getProxyCredential();
+            merged.apiBaseUrl = config.getApiBaseUrl();
+            return merged;
         }
 
-        return new BasicExConfig(
-                config.getPrivateKey() != null ? config.getPrivateKey() : old.getPrivateKey(),
-                config.getCertificate() != null ? config.getCertificate() : old.getCertificate(),
-                old.getCertificateSerialNumber(),
-                old.getMerchantCode(),
-                config.getConnectTimeout() != 0 ? config.getConnectTimeout() : old.getConnectTimeout(),
-                config.getReadTimeout() != 0 ? config.getReadTimeout() : old.getReadTimeout(),
-                config.getMaxNetworkRetries() != 0 ? config.getMaxNetworkRetries() : old.getMaxNetworkRetries(),
-                config.getConnectionProxy() != null ? config.getConnectionProxy() : old.getConnectionProxy(),
-                config.getProxyCredential() != null ? config.getProxyCredential() : old.getProxyCredential(),
-                config.getApiBaseUrl() != null ? config.getApiBaseUrl() : old.getApiBaseUrl()
-        );
+        merged.privateKey = config.getPrivateKey() != null ? config.getPrivateKey() : old.getPrivateKey();
+        merged.certificate = config.getCertificate() != null ? config.getCertificate() : old.getCertificate();
+        merged.certificateSerialNumber = old.getCertificateSerialNumber();
+        merged.merchantCode = old.getMerchantCode();
+        merged.apiKey = config.getApiKey() != null ? config.getApiKey() : old.getApiKey();
+        merged.secretKey = config.getSecretKey() != null ? config.getSecretKey() : old.getSecretKey();
+        merged.connectTimeout = config.getConnectTimeout() != 0 ? config.getConnectTimeout() : old.getConnectTimeout();
+        merged.readTimeout = config.getReadTimeout() != 0 ? config.getReadTimeout() : old.getReadTimeout();
+        merged.maxNetworkRetries = config.getMaxNetworkRetries() != 0 ? config.getMaxNetworkRetries() : old.getMaxNetworkRetries();
+        merged.connectionProxy = config.getConnectionProxy() != null ? config.getConnectionProxy() : old.getConnectionProxy();
+        merged.proxyCredential = config.getProxyCredential() != null ? config.getProxyCredential() : old.getProxyCredential();
+        merged.apiBaseUrl = config.getApiBaseUrl() != null ? config.getApiBaseUrl() : old.getApiBaseUrl();
+
+        return merged;
     }
 
     public static class Builder {
@@ -127,6 +154,16 @@ public class BasicExConfig {
             // get merchant code from certificate
             this.config.merchantCode = X509CertificateUtils.getCommonNameFromCertificate(certificate);
 
+            return this;
+        }
+
+        public Builder apiKey(String apiKey) {
+            this.config.apiKey = apiKey;
+            return this;
+        }
+
+        public Builder secretKey(String secretKey) {
+            this.config.secretKey = secretKey;
             return this;
         }
 
@@ -169,6 +206,7 @@ public class BasicExConfig {
         }
 
         public BasicExConfig build() {
+            this.config.validateAuth();
             return this.config;
         }
     }

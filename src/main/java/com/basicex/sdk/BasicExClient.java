@@ -104,6 +104,21 @@ public class BasicExClient {
     }
 
     /**
+     * Create a new BasicEx client instance using API Key.
+     *
+     * @param apiKey    The API Key
+     * @param secretKey The Secret Key
+     * @return BasicExClient instance
+     */
+    public static BasicExClient createWithApiKey(String apiKey, String secretKey) {
+        BasicExConfig config = BasicExConfig.builder()
+                .apiKey(apiKey)
+                .secretKey(secretKey)
+                .build();
+        return new BasicExClient(config);
+    }
+
+    /**
      * Create a new BasicEx client instance.
      *
      * @param config The BasicExConfig instance

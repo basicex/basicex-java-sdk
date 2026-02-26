@@ -70,4 +70,13 @@ public class SignatureTest {
 
         System.out.println(signature);
     }
+
+    @Test
+    public void hmacSignatureTest() throws Exception {
+        String secretKey = "my_secret_key";
+        String signInput = "https://openapi.basicex.com/v2/invoices{\"t\": \"123\"}";
+        String signature = com.basicex.sdk.util.HmacUtils.signHmacSha512(secretKey, signInput);
+        System.out.println("HMAC Signature: " + signature);
+        org.junit.jupiter.api.Assertions.assertNotNull(signature);
+    }
 }

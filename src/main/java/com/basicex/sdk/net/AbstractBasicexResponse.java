@@ -19,6 +19,7 @@ import java.util.Optional;
 /**
  * Common interface representing an HTTP response from BasicEx
  */
+
 public abstract class AbstractBasicexResponse<T> {
     /** The HTTP status code of the response. */
     private final int code;

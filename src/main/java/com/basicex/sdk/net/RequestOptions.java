@@ -28,6 +28,10 @@ public class RequestOptions {
 
     private final PrivateKey privateKey;
 
+    private final String apiKey;
+
+    private final String secretKey;
+
     private final String apiBaseUrl;
 
     private final Integer connectTimeout;
@@ -37,12 +41,14 @@ public class RequestOptions {
     private final PasswordAuthentication proxyCredential;
 
     public static RequestOptions getDefault() {
-        return new RequestOptions(null, null, null, null, null, null, null, null);
+        return new RequestOptions(null, null, null, null, null, null, null, null, null, null);
     }
 
     private RequestOptions(
             X509Certificate certificate,
             PrivateKey privateKey,
+            String apiKey,
+            String secretKey,
             String apiBaseUrl,
             Integer connectTimeout,
             Integer readTimeout,
@@ -51,6 +57,8 @@ public class RequestOptions {
             PasswordAuthentication proxyCredential) {
         this.certificate = certificate;
         this.privateKey = privateKey;
+        this.apiKey = apiKey;
+        this.secretKey = secretKey;
         this.apiBaseUrl = apiBaseUrl;
         this.connectTimeout = connectTimeout;
         this.readTimeout = readTimeout;
@@ -64,6 +72,8 @@ public class RequestOptions {
             return new RequestOptions(
                     config.getCertificate(),
                     config.getPrivateKey(),
+                    config.getApiKey(),
+                    config.getSecretKey(),
                     config.getApiBaseUrl(),
                     config.getConnectTimeout(),
                     config.getReadTimeout(),
@@ -75,6 +85,8 @@ public class RequestOptions {
         return new RequestOptions(
                 options.getCertificate() != null ? options.getCertificate() : config.getCertificate(),
                 options.getPrivateKey() != null ? options.getPrivateKey() : config.getPrivateKey(),
+                options.getApiKey() != null ? options.getApiKey() : config.getApiKey(),
+                options.getSecretKey() != null ? options.getSecretKey() : config.getSecretKey(),
                 options.getApiBaseUrl() != null ? options.getApiBaseUrl() : config.getApiBaseUrl(),
                 options.getConnectTimeout() != null ? options.getConnectTimeout() : config.getConnectTimeout(),
                 options.getReadTimeout() != null ? options.getReadTimeout() : config.getReadTimeout(),

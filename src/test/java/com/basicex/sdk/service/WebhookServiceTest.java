@@ -13,6 +13,7 @@ package com.basicex.sdk.service;
 import com.basicex.sdk.BaseTest;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.webhook.InvoiceCompletedWebhookMessage;
+import com.basicex.sdk.model.webhook.InvoicePartialCompletedWebhookMessage;
 import com.basicex.sdk.model.webhook.WebhookEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -27,13 +28,36 @@ public class WebhookServiceTest extends BaseTest {
 
     @Test
     public void testWebhook() throws CertificateException, IOException, BasicexException {
-        String requestBody = "{\"id\":\"2a94f3ab-5baf-4a7d-86f8-805972a69860\",\"objectId\":\"40620231008235252701382549094684\",\"object\":\"event\",\"created\":\"1696780395439\",\"type\":\"invoice.completed\",\"data\":{\"invoiceId\":\"40620231008235252701382549094684\",\"merOrderId\":\"6b2bc44b2d4543f287c5021deaf65770\",\"fiat\":\"\",\"currency\":\"USDT\",\"fiatAmount\":\"0.00\",\"paidAmount\":\"2.000000\",\"totalAmount\":\"2.000000\",\"currencyExchange\":null,\"tradeTime\":\"1696780395437\",\"channel\":\"chain_pay\",\"metadata\":null,\"chainPaymentInfo\":{\"network\":null,\"payeeAddress\":null,\"transactionId\":\"123456\",\"blockHash\":\"\",\"blockHeight\":\"0\",\"packageTime\":\"1696780395241\"}},\"retriesNum\":0}";
-        String signature = "aSp76ViiQcR4Zbz3OsCeRrJTZ34IaoB1TkAaAuNjWOooLq69mB78K/bEEOiEUBx8yTpksmtWwovtmKVdzUZlIozkdByxB4HB3glwiaI69/hmUbN9uworpM2WN9ZUDlhAyXEQyUnci5We2ssndhmQFujY7SmRb8+6yCmKZqEzNT6Ditxb3X3G7N20vBUnuvWFlgXaDo45CSlLfqFU9B3fAFAJGwvvfWi2AoQ7OxK2Eml9Sroei/Ex1N07UuO1kqZDi4S3g58Nh8vv18UzxrXzhyd9fjPO7xU1WLK/RBlRgCDa8SOad4NxGTy6imo+70iNUlEFrMEVZYKofCBBcsGwYQ==";
-        String serialNo = "3d:47:36:3a:64:9c:15:ec:60:c3:ed:e5:71:89:08:52:5b:09:fb:f1";
-        String notificationUrl = "https://basicex.com";
-        WebhookEvent event = getClient().webhook().validate(requestBody, notificationUrl, signature, serialNo);
+        String requestBody = "{\"id\":\"0e9ab3a4-e15d-404e-bed8-f5e0745ce411\",\"objectId\":\"40620260209151154753501394125045\",\"object\":\"event\",\"created\":\"1770621716791\",\"type\":\"invoice.partial_completed\",\"data\":{\"invoiceId\":\"40620260209151154753501394125045\",\"merOrderId\":\"3453454654428\",\"fiat\":\"\",\"currency\":\"USDT\",\"fiatAmount\":\"0.00\",\"paidAmount\":\"44.000000\",\"totalAmount\":\"50.000000\",\"currencyExchange\":null,\"tradeTime\":\"1770621716791\",\"channel\":\"chain_pay\",\"metadata\":{},\"chainPaymentInfo\":{\"network\":\"TRC20\",\"payeeAddress\":\"TPpsBWRYfhUaBDmCcv2zViCVDiUvpz8pyM\",\"payerAddress\":\"TBwcXyXYMpjGfdWw31LfS3UCREoREwkEN5\",\"transactionId\":\"224f241e1ed3a10e5f3c7704bd7bbac7f949dafbfdfb53d2ba558ddd61577d33\",\"blockHash\":null,\"blockHeight\":null,\"packageTime\":null}},\"retriesNum\":8}";
+        String signature = "9bd0085ced5f622780078137d13def3c3751105cc86f58effe08ce644825acd3994501b45fc8d8ff48a61536dea02a107e2354d27b3be242d8c71b578beaf7c1";
+        // String serialNo = "3d:47:36:3a:64:9c:15:ec:60:c3:ed:e5:71:89:08:52:5b:09:fb:f1";
+        String notificationUrl = "https://google.com";
+        String signType = "key";
+        WebhookEvent event = getClient().webhook().validate(requestBody, notificationUrl, signature, signType);
         Assertions.assertNotNull(event);
-        Assertions.assertEquals("invoice.completed", event.getType());
-        Assertions.assertTrue(event.getData() instanceof InvoiceCompletedWebhookMessage);
+        Assertions.assertEquals("invoice.partial_completed", event.getType());
+        Assertions.assertTrue(event.getData() instanceof InvoicePartialCompletedWebhookMessage);
+    }
+
+    @Test
+    public void testWebhookApiKey() throws CertificateException, IOException, BasicexException, java.security.NoSuchAlgorithmException, java.security.InvalidKeyException {
+        String notificationUrl = "https://basicex.com/webhook";
+        String secretKey = "test_secret_key";
+        String requestBody = "{\"id\":\"111\",\"object\":\"event\",\"type\":\"invoice.partial_completed\",\"data\":{\"invoiceId\":\"222\",\"paidAmount\":\"1.5\"}}";
+        
+        String signInput = notificationUrl + requestBody;
+        String signature = com.basicex.sdk.util.HmacUtils.signHmacSha512(secretKey, signInput);
+
+        com.basicex.sdk.BasicExConfig config = com.basicex.sdk.BasicExConfig.builder()
+                .apiKey("test_api_key")
+                .secretKey(secretKey)
+                .build();
+        com.basicex.sdk.BasicExClient client = new com.basicex.sdk.BasicExClient(config);
+
+        WebhookEvent event = client.webhook().validate(requestBody, notificationUrl, signature, null, "key");
+        
+        Assertions.assertNotNull(event);
+        Assertions.assertEquals("invoice.partial_completed", event.getType());
+        Assertions.assertTrue(event.getData() instanceof com.basicex.sdk.model.webhook.InvoicePartialCompletedWebhookMessage);
     }
 }

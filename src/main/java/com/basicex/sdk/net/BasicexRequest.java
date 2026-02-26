@@ -13,6 +13,7 @@ package com.basicex.sdk.net;
 import com.basicex.sdk.exception.ApiConnectionException;
 import com.basicex.sdk.exception.AuthenticationException;
 import com.basicex.sdk.exception.BasicexException;
+import com.basicex.sdk.util.StringUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
 import lombok.Data;
 import lombok.Value;
@@ -112,15 +113,21 @@ public class BasicexRequest {
 
         // Authorization
         X509Certificate certificate = options.getCertificate();
-        if (certificate == null) {
+        if(StringUtils.isEmpty(options.getApiKey()) && options.getCertificate() == null) {
+
+        }
+
+        if(options.getCertificate() != null) {
+            headerMap.put("X-Identity", Collections.singletonList(X509CertificateUtils.toPEMString(certificate).replaceAll("[\r\n]+", "")));
+        } else if(StringUtils.isNotEmpty(options.getApiKey())) {
+            headerMap.put("X-Api-Key", Collections.singletonList(options.getApiKey().trim()));
+        } else {
             throw new AuthenticationException(
-                    "No Merchant certificate provided.",
+                    "No Secret Key provided.",
                     null,
                     null,
                     0);
         }
-
-        headerMap.put("X-Identity", Collections.singletonList(X509CertificateUtils.toPEMString(certificate).replaceAll("[\r\n]+", "")));
 
         return HttpHeaders.of(headerMap);
     }

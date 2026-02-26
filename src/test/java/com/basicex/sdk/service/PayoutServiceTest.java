@@ -14,6 +14,7 @@ package com.basicex.sdk.service;
 import com.basicex.sdk.BaseTest;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.PayoutObject;
+import com.basicex.sdk.model.PayoutResp;
 import com.basicex.sdk.model.params.PayoutCreateParams;
 import com.basicex.sdk.model.params.constant.NetWorkType;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,6 @@ import java.util.UUID;
 
 public class PayoutServiceTest extends BaseTest {
 
-    @Test
     void createPayoutTest() throws CertificateException, IOException, BasicexException {
         PayoutService payout = getClient().payouts();
         Map<String, String> map = new HashMap<>();
@@ -47,5 +47,12 @@ public class PayoutServiceTest extends BaseTest {
                 .build();
         PayoutObject payoutObject = payout.create(params);
         System.out.println(payoutObject);
+    }
+
+    @Test
+    void getPayoutTest() throws CertificateException, IOException, BasicexException {
+        PayoutService payout = getClient().payouts();
+        PayoutResp resp = payout.get("40820250418111809951215537766738");
+        System.out.println(resp);
     }
 }

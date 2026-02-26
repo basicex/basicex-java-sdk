@@ -17,11 +17,14 @@ import com.basicex.sdk.model.PlatformCertificateObject;
 import com.basicex.sdk.model.params.constant.WebhookType;
 import com.basicex.sdk.model.webhook.InvoiceCompletedWebhookMessage;
 import com.basicex.sdk.model.webhook.InvoicePaidWebhookMessage;
+import com.basicex.sdk.model.webhook.InvoicePartialCompletedWebhookMessage;
 import com.basicex.sdk.model.webhook.PayoutWebhookMessage;
 import com.basicex.sdk.model.webhook.WebhookEvent;
 import com.basicex.sdk.net.ApiResource;
 import com.basicex.sdk.net.BasicexResponseGetter;
 import com.basicex.sdk.net.TypeReference;
+import com.basicex.sdk.util.HmacUtils;
+import com.basicex.sdk.util.StringUtils;
 import com.basicex.sdk.util.X509CertificateUtils;
 import com.google.gson.JsonObject;
 import org.bouncycastle.util.encoders.Base64;
@@ -54,14 +57,26 @@ public class WebhookService extends ApiService {
      * @param notificationUrl Webhook通知地址
      */
     public WebhookEvent<?> validate(HttpServletRequest request, String notificationUrl) throws BasicexException, IOException {
-        if(request.getHeader("X-Webhook-Signature") == null || request.getHeader("X-Webhook-Signature-Serial") == null) {
-            throw new SignatureException("Webhook请求头缺少X-Webhook-Signature或X-Webhook-Signature-Serial", null, null, null);
+        if(request.getHeader("X-Webhook-Signature") == null) {
+            throw new SignatureException("Webhook请求头缺少X-Webhook-Signature", null, null, null);
         }
 
         String signature = request.getHeader("X-Webhook-Signature");
         String serial = request.getHeader("X-Webhook-Signature-Serial");
+        String signatureType = request.getHeader("X-Webhook-Signature-Type");
 
-        return validate(httpServletRequestToString(request), notificationUrl, signature, serial);
+        return validate(httpServletRequestToString(request), notificationUrl, signature, serial, signatureType);
+    }
+
+    /**
+     * 验证Webhook请求是否合规
+     * @param requestBody Webhook请求体
+     * @param notificationUrl Webhook通知地址
+     * @param signature Webhook请求头中的X-Webhook-Signature
+     * @param signatureType Webhook请求头中的X-Webhook-Signature-Type (可为空)
+     */
+    public WebhookEvent<?> validate(String requestBody, String notificationUrl, String signature, String signatureType) throws BasicexException {
+        return this.validate(requestBody, notificationUrl, signature, null, signatureType);
     }
 
     /**
@@ -70,11 +85,34 @@ public class WebhookService extends ApiService {
      * @param notificationUrl Webhook通知地址
      * @param signature Webhook请求头中的X-Webhook-Signature
      * @param certificateSerialNo Webhook请求头中的X-Webhook-Signature-Serial
+     * @param signatureType Webhook请求头中的X-Webhook-Signature-Type (可为空)
      */
-    public WebhookEvent<?> validate(String requestBody, String notificationUrl, String signature, String certificateSerialNo) throws BasicexException {
-        X509Certificate certificate = getPlatformCertificate(Objects.requireNonNull(certificateSerialNo));
-        if(!validateSignature(String.format("%s%s", notificationUrl, requestBody).getBytes(), Base64.decode(signature), certificate)) {
-            throw new SignatureException("Signature verification failure, illegal webhook request", null, null, null);
+    public WebhookEvent<?> validate(String requestBody, String notificationUrl, String signature, String certificateSerialNo, String signatureType) throws BasicexException {
+        String signInput = String.format("%s%s", notificationUrl, requestBody);
+
+        if ("key".equalsIgnoreCase(signatureType)) {
+            // API Key 模式 HMAC 验签
+            String secretKey = this.getResponseGetter().getConfig().getSecretKey();
+            if (StringUtils.isBlank(secretKey)) {
+                throw new SignatureException("SecretKey is not configured for webhook HMAC verification", null, null, null);
+            }
+            try {
+                String expectedSignature = HmacUtils.signHmacSha512(secretKey, signInput);
+                if (!expectedSignature.equalsIgnoreCase(signature)) {
+                    throw new SignatureException("Signature verification failure, illegal webhook request", null, null, null);
+                }
+            } catch (Exception e) {
+                throw new SignatureException("Signature verification failure: " + e.getMessage(), e);
+            }
+        } else {
+            // 平台证书模式 RSA 验签
+            if (StringUtils.isBlank(certificateSerialNo)) {
+                throw new SignatureException("Webhook请求头缺少X-Webhook-Signature-Serial", null, null, null);
+            }
+            X509Certificate certificate = getPlatformCertificate(certificateSerialNo);
+            if(!validateSignature(signInput.getBytes(), Base64.decode(signature), certificate)) {
+                throw new SignatureException("Signature verification failure, illegal webhook request", null, null, null);
+            }
         }
 
         // parse request body
@@ -90,6 +128,9 @@ public class WebhookService extends ApiService {
         switch (type) {
             case INVOICE_COMPLETED:
                 typeToken = new TypeReference<WebhookEvent<InvoiceCompletedWebhookMessage>>(){};
+                break;
+            case INVOICE_PARTIAL_COMPLETED:
+                typeToken = new TypeReference<WebhookEvent<InvoicePartialCompletedWebhookMessage>>(){};
                 break;
             case INVOICE_PAID:
                 typeToken = new TypeReference<WebhookEvent<InvoicePaidWebhookMessage>>(){};

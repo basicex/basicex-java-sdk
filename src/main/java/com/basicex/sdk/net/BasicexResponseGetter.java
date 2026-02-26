@@ -10,6 +10,7 @@
 
 package com.basicex.sdk.net;
 
+import com.basicex.sdk.BasicExConfig;
 import com.basicex.sdk.exception.BasicexException;
 import com.basicex.sdk.model.BasicexObject;
 
@@ -17,6 +18,8 @@ import java.lang.reflect.Type;
 import java.io.InputStream;
 
 public interface BasicexResponseGetter {
+    BasicExConfig getConfig();
+
     <T> T request(
             ApiResource.RequestMethod method,
             String path,

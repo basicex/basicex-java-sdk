@@ -13,7 +13,9 @@ package com.basicex.sdk.net;
 import com.basicex.sdk.BasicExConfig;
 import com.basicex.sdk.exception.*;
 import com.basicex.sdk.model.BasicexError;
+import com.basicex.sdk.util.HmacUtils;
 import com.basicex.sdk.util.PrivateKeyUtils;
+import com.basicex.sdk.util.StringUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -40,12 +42,22 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
 
 
     @Override
+    public BasicExConfig getConfig() {
+        return this.config;
+    }
+
+    @Override
     public <T> T request(ApiResource.RequestMethod method, String path, Object params, TypeReference<T> typeToken, Boolean signRequest, RequestOptions options) throws BasicexException {
 
         String fullUrl = String.format("%s%s", Optional.ofNullable(options).map(x -> Optional.ofNullable(x.getApiBaseUrl()).orElse(config.getApiBaseUrl())).orElse(config.getApiBaseUrl()), path);
         BasicexRequest request = new BasicexRequest(method, fullUrl, params, RequestOptions.merge(options, config));
         if (signRequest) {
-            request.setHeaders(request.getHeaders().withAdditionalHeader("X-Signature", signature(params, path, request.getOptions())));
+            String signature = signature(params, path, request.getOptions());
+            request.setHeaders(request.getHeaders().withAdditionalHeader("X-Signature", signature));
+            
+            if (StringUtils.isNotBlank(request.getOptions().getApiKey())) {
+                request.setHeaders(request.getHeaders().withAdditionalHeader("X-Api-Key", request.getOptions().getApiKey()));
+            }
         }
         BasicexResponse response = httpClient.requestWithRetries(request);
 
@@ -83,7 +95,12 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
         String fullUrl = String.format("%s%s", Optional.ofNullable(options).map(x -> Optional.ofNullable(x.getApiBaseUrl()).orElse(config.getApiBaseUrl())).orElse(config.getApiBaseUrl()), path);
         BasicexRequest request = new BasicexRequest(method, fullUrl, params, RequestOptions.merge(options, config));
         if (signRequest) {
-            request.getHeaders().withAdditionalHeader("X-Signature", signature(params, path, request.getOptions()));
+            String signature = signature(params, path, request.getOptions());
+            request.setHeaders(request.getHeaders().withAdditionalHeader("X-Signature", signature));
+            
+            if (StringUtils.isNotBlank(request.getOptions().getApiKey())) {
+                request.setHeaders(request.getHeaders().withAdditionalHeader("X-Api-Key", request.getOptions().getApiKey()));
+            }
         }
         BasicexResponseStream responseStream = httpClient.requestStreamWithRetries(request);
 
@@ -111,8 +128,14 @@ public class SignatureResponseGetter implements BasicexResponseGetter {
         String signInput = options.getApiBaseUrl() + path + Optional.ofNullable(signStr).orElse("");
 
         try {
-            byte[] sign = PrivateKeyUtils.sign(options.getPrivateKey(), options.getCertificate().getSigAlgName(), signInput.getBytes());
-            return Base64.toBase64String(sign);
+            if (StringUtils.isNotBlank(options.getSecretKey())) {
+                // API Key (HMAC-SHA512)
+                return HmacUtils.signHmacSha512(options.getSecretKey(), signInput);
+            } else {
+                // Certificate (RSA)
+                byte[] sign = PrivateKeyUtils.sign(options.getPrivateKey(), options.getCertificate().getSigAlgName(), signInput.getBytes());
+                return Base64.toBase64String(sign);
+            }
         } catch (Exception e) {
             throw new SignatureException("Signature failed:" + e.getMessage(), e);
         }

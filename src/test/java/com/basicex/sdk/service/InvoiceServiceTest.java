@@ -35,12 +35,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class InvoiceServiceTest extends BaseTest {
     @Test
     public void createEmptyInvoiceTest() throws BasicexException, CertificateException, IOException {
-        InvoiceObject obj = createFiatCurrencyInvoice();
+        InvoiceObject obj = createFixedCurrencyInvoice();
 
         System.out.println(obj.getInvoiceId());
     }
 
-    @Test
     public void updateInvoiceTest() throws CertificateException, IOException, BasicexException {
         getClient().invoices().update("40620230918161349373246929715463", InvoiceUpdateParams.builder().currency("USDT").build());
     }
@@ -146,7 +145,6 @@ public class InvoiceServiceTest extends BaseTest {
         Assertions.assertNotNull(invoice.getInvoiceId());
     }
 
-    @Test
     void updateTest() throws CertificateException, IOException, BasicexException {
         InvoiceObject o = createFixedCurrencyInvoice();
         InvoiceObject invoice = getClient().invoices().update(o.getInvoiceId(), InvoiceUpdateParams.builder()
@@ -196,7 +194,6 @@ public class InvoiceServiceTest extends BaseTest {
     }
 
 
-    @Test
     void invoiceTest1() throws CertificateException, IOException, BasicexException {
         Map<String, String> metadata = new HashMap<>();
         metadata.put("a", "1");

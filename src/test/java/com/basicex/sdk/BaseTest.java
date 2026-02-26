@@ -21,11 +21,16 @@ public abstract class BaseTest {
 
     // public String configPath = "D:\\f22c4d55-6670-4368-82fa-a8a55e664bfd\\config.json";
     // public String configPath = "D:\\8f0867ba-085f-447c-882a-0684c4f6ded2\\config.json";
-    public String configPath = "C:\\Users\\tt\\Downloads\\4301d61a-e6cb-4547-8d4e-216dfb714ffe\\config.json";
+    // public String configPath = "C:\\Users\\tt\\Downloads\\fc1c4e67-8b3f-4338-b4cc-78f3ed44170c\\config.json";
 
     // public String configPath = "D:\\production_test\\config.json";
-    // public String configPath = "D:\\dowloads\\zhimaDADA\\f22c4d55-6670-4368-82fa-a8a55e664bfd\\config.json";
+    // public String configPath = "C:\\Users\\tt\\Downloads\\d59544ac-52e6-48e3-93bc-3c56ed469c7b\\config.json";
     public BasicExClient getClient() throws CertificateException, IOException {
-        return new BasicExClient(configPath);
+        BasicExConfig config = BasicExConfig.builder()
+                .apiKey("0sIBxa9U92L7Xm34jYm7VLprMcQOpe89b8f6Hu99ztwti9BDPl9GU3j619nx97bA")
+                .secretKey("p0z2hM7LAoL9inH3GkVy2445d3GiU3i7DZfQ1unEISb4a6sD28RS2lg3qzw19ZrS")
+                .apiBaseUrl("https://test-openapi.basicex.com/v2")
+                .build();
+        return new BasicExClient(config);
     }
 }

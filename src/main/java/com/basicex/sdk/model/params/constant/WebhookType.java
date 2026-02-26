@@ -25,6 +25,10 @@ public enum WebhookType {
      */
     INVOICE_COMPLETED("invoice.completed"),
     /**
+     * 支付票据在有效期内存在部分支付，但支付的金额小于票据的金额，商户务必根据paidAmount字段获取当前已支付的金额
+     */
+    INVOICE_PARTIAL_COMPLETED("invoice.partial_completed"),
+    /**
      * 支付票据已过期事件通知，该事件通知在支付票据过期后触发，代表该支付票据已经过期
      */
     INVOICE_EXPIRED("invoice.expired"),
